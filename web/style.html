@@ -1,0 +1,59 @@
+<!-- index.html - Nice HTML Website with Bootstrap and SocketIO for Real-Time Updates -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Site de Commandes en Ligne</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        body { padding: 20px; }
+        .product-card { margin-bottom: 20px; }
+        .product-img { height: 200px; object-fit: cover; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Produits Disponibles</h1>
+        <div id="products" class="row"></div>
+    </div>
+
+    <script>
+        const socket = io('http://your-server-url'); // Replace with your server URL, e.g., https://your-render-app.onrender.com
+
+        // Function to render a product card
+        function renderProduct(product) {
+            const col = document.createElement('div');
+            col.className = 'col-md-4 product-card';
+            col.innerHTML = `
+                <div class="card">
+                    <img src="${product.image_url}" class="card-img-top product-img" alt="${product.name}">
+                    <div class="card-body">
+                        <h5 class="card-title">${product.name}</h5>
+                        <p class="card-text">Prix: ${product.price}</p>
+                        <p class="card-text">${product.description}</p>
+                        <a href="https://wa.me/+1234567890?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(product.name)}%20au%20prix%20de%20${encodeURIComponent(product.price)}" 
+                           class="btn btn-success" target="_blank">Contacter sur WhatsApp</a>
+                    </div>
+                </div>
+            `;
+            document.getElementById('products').appendChild(col);
+        }
+
+        // Load initial products
+        fetch('http://your-server-url/products') // Replace with your server URL
+            .then(response => response.json())
+            .then(products => {
+                products.forEach(renderProduct);
+            });
+
+        // Listen for real-time new products
+        socket.on('new_product', (product) => {
+            renderProduct(product);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
