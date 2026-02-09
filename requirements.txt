@@ -1,6 +1,7 @@
-# requirements.txt - For hosting on Render
+
 
 Flask==3.0.3
 flask-socketio==5.3.6
-eventlet==0.36.1
+gevent==24.2.1
 werkzeug==3.0.3
+gunicorn==22.0.0

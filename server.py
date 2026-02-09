@@ -1,19 +1,18 @@
-# app.py - Central Python Server using Flask and SocketIO for real-time updates
+# server.py - Central Python Server using Flask and SocketIO for real-time updates with gevent
+
+from gevent import monkey
+monkey.patch_all()
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_socketio import SocketIO, emit
 import os
-import base64
 from werkzeug.utils import secure_filename
-import eventlet
-
-eventlet.monkey_patch()
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, async_mode='gevent', cors_allowed_origins="*")
 
 # In-memory product storage (for simplicity; use a DB like SQLite/Mongo for production)
 products = []

@@ -1,4 +1,4 @@
-<!-- index.html - Nice HTML Website with Bootstrap and SocketIO for Real-Time Updates -->
+<!-- web/style.html - Nice HTML Website with Bootstrap and SocketIO for Real-Time Updates -->
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -21,7 +21,7 @@
     </div>
 
     <script>
-        const socket = io('http://your-server-url'); // Replace with your server URL, e.g., https://your-render-app.onrender.com
+        const socket = io(); // Connect to the current server
 
         // Function to render a product card
         function renderProduct(product) {
@@ -43,7 +43,7 @@
         }
 
         // Load initial products
-        fetch('http://your-server-url/products') // Replace with your server URL
+        fetch('/products')
             .then(response => response.json())
             .then(products => {
                 products.forEach(renderProduct);
