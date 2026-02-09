@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
-# IMPORTANT : threading (PAS eventlet)
+# SocketIO en threading (OK Python 3.13)
 socketio = SocketIO(
     app,
     cors_allowed_origins="*",
@@ -35,8 +35,8 @@ def publish_product():
         return jsonify({'error': 'Image invalide'}), 400
 
     filename = secure_filename(image.filename)
-    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    image.save(image_path)
+    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    image.save(path)
 
     product = {
         'id': len(products) + 1,
@@ -48,7 +48,6 @@ def publish_product():
 
     products.append(product)
 
-    # Envoi temps réel
     socketio.emit('new_product', product)
 
     return jsonify(product)
@@ -67,5 +66,10 @@ def home():
 
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    socketio.run(app, host='0.0.0.0', port=5000)
+    socketio.run(
+        app,
+        host='0.0.0.0',
+        port=5000,
+        allow_unsafe_werkzeug=True
+    )
 
