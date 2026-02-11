@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, send_from_directory
-from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
 import os
 
@@ -8,12 +7,6 @@ app = Flask(__name__)
 # Configuration
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
-
-socketio = SocketIO(
-    app,
-    cors_allowed_origins="*",
-    async_mode="threading"
-)
 
 products = []
 
@@ -49,12 +42,11 @@ def publish_product():
         'name': name,
         'price': price,
         'description': description,
-        'whatsapp': whatsapp,                    # Ex: 243812345678
+        'whatsapp': whatsapp,
         'image_url': f'/static/uploads/{filename}'
     }
 
     products.append(product)
-    socketio.emit('new_product', product)
 
     return jsonify({'message': 'Produit publié avec succès', 'product': product})
 
@@ -72,9 +64,4 @@ def home():
 
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    socketio.run(
-        app,
-        host='0.0.0.0',
-        port=5000,
-        allow_unsafe_werkzeug=True
-    )
+    app.run(host='0.0.0.0', port=5000)
