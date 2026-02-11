@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
-# SocketIO en threading (OK Python 3.13)
 socketio = SocketIO(
     app,
     cors_allowed_origins="*",
@@ -26,13 +25,14 @@ def publish_product():
     name = request.form.get('name')
     price = request.form.get('price')
     description = request.form.get('description')
+    whatsapp = request.form.get('whatsapp')
     image = request.files.get('image')
 
-    if not all([name, price, description, image]):
-        return jsonify({'error': 'Champs manquants'}), 400
+    if not all([name, price, description, whatsapp, image]):
+        return jsonify({'error': 'Tous les champs sont obligatoires'}), 400
 
     if not allowed_file(image.filename):
-        return jsonify({'error': 'Image invalide'}), 400
+        return jsonify({'error': 'Format d\'image non supporté'}), 400
 
     filename = secure_filename(image.filename)
     path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -43,14 +43,14 @@ def publish_product():
         'name': name,
         'price': price,
         'description': description,
+        'whatsapp': whatsapp.strip().replace('+', ''),  # 24381...
         'image_url': f'/static/uploads/{filename}'
     }
 
     products.append(product)
-
     socketio.emit('new_product', product)
 
-    return jsonify(product)
+    return jsonify({'message': 'Produit publié avec succès', 'product': product})
 
 @app.route('/products')
 def get_products():
@@ -60,7 +60,7 @@ def get_products():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route('/')
+@app.route("/")
 def home():
     return send_from_directory('web', 'style.html')
 
@@ -72,4 +72,3 @@ if __name__ == '__main__':
         port=5000,
         allow_unsafe_werkzeug=True
     )
-
