@@ -21,7 +21,6 @@ def publish_product():
     whatsapp_raw = request.form.get('whatsapp', '').strip()
     image = request.files.get('image')
 
-    # Nettoyage strict du numéro WhatsApp
     whatsapp = ''.join(c for c in whatsapp_raw if c.isdigit())
 
     if not all([name, price, description, whatsapp, image]):

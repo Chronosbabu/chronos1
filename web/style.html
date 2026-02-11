@@ -18,29 +18,45 @@
             height: 180px;
             object-fit: cover;
         }
-        .search-bar {
-            max-width: 600px;
-            margin: 20px auto;
+        .search-bar { max-width: 600px; margin: 20px auto; }
+        .refresh-btn { font-size: 1.1rem; padding: 10px 25px; }
+        .cart-bar {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
         }
-        .refresh-btn {
-            font-size: 1.1rem;
-            padding: 10px 25px;
+        .form-check-input:checked {
+            background-color: #198754;
+            border-color: #198754;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="mb-0">Produits disponibles</h2>
         <button id="refreshBtn" class="btn btn-primary refresh-btn">
             Actualiser les produits
         </button>
     </div>
 
+    <!-- Barre de recherche -->
     <div class="search-bar">
         <input type="text" id="searchInput" class="form-control form-control-lg" 
                placeholder="Rechercher un produit...">
+    </div>
+
+    <!-- Barre du panier (apparaît dynamiquement) -->
+    <div id="cartBar" class="cart-bar d-none">
+        <div class="d-flex justify-content-between align-items-center">
+            <span id="cartCount" class="fw-bold">0 produit sélectionné</span>
+            <button onclick="sendToWhatsApp()" class="btn btn-success">
+                Envoyer la commande sur WhatsApp
+            </button>
+        </div>
     </div>
 
     <div id="products" class="row"></div>
@@ -48,6 +64,7 @@
 
 <script>
     let allProducts = [];
+    let selectedIds = new Set();
 
     function renderProducts(filteredProducts) {
         const container = document.getElementById('products');
@@ -59,6 +76,7 @@
         }
 
         filteredProducts.forEach(p => {
+            const isSelected = selectedIds.has(p.id);
             const col = document.createElement('div');
             col.className = 'col-lg-3 col-md-4 col-sm-6 mb-4';
             col.innerHTML = `
@@ -68,10 +86,18 @@
                         <h5 class="card-title">${p.name}</h5>
                         <p class="card-text flex-grow-1">${p.description}</p>
                         <strong class="mb-3">${p.price}</strong>
+                        
                         <a href="https://wa.me/${p.whatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}" 
-                           target="_blank" class="btn btn-success w-100">
+                           target="_blank" class="btn btn-success w-100 mb-3">
                            Contacter sur WhatsApp
                         </a>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" 
+                                   ${isSelected ? 'checked' : ''} 
+                                   onchange="toggleCart(${p.id})">
+                            <label class="form-check-label">Ajouter au panier</label>
+                        </div>
                     </div>
                 </div>
             `;
@@ -79,18 +105,64 @@
         });
     }
 
-    // Fonction pour charger / recharger les produits
+    function toggleCart(id) {
+        if (selectedIds.has(id)) {
+            selectedIds.delete(id);
+        } else {
+            selectedIds.add(id);
+        }
+        updateCartBar();
+    }
+
+    function updateCartBar() {
+        const count = selectedIds.size;
+        const cartBar = document.getElementById('cartBar');
+        const cartCount = document.getElementById('cartCount');
+
+        if (count > 0) {
+            cartBar.classList.remove('d-none');
+            cartCount.textContent = `${count} produit${count > 1 ? 's' : ''} sélectionné${count > 1 ? 's' : ''}`;
+        } else {
+            cartBar.classList.add('d-none');
+        }
+    }
+
+    function sendToWhatsApp() {
+        const selected = allProducts.filter(p => selectedIds.has(p.id));
+        if (selected.length === 0) return;
+
+        // On prend le numéro WhatsApp du premier produit sélectionné
+        const whatsapp = selected[0].whatsapp;
+
+        let message = "Bonjour,\nJe suis intéressé par les produits suivants :\n\n";
+        let total = 0;
+
+        selected.forEach(p => {
+            const priceNum = parseFloat(p.price.replace(/[^0-9.]/g, '')) || 0;
+            total += priceNum;
+            message += `- ${p.name} → ${p.price}\n`;
+        });
+
+        message += `\nTotal : ${total} CDF\n\nMerci de me confirmer la disponibilité !`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const url = `https://wa.me/${whatsapp}?text=${encodedMessage}`;
+        
+        window.open(url, '_blank');
+    }
+
     function loadProducts() {
         fetch('/products')
             .then(r => r.json())
             .then(data => {
                 allProducts = data;
                 renderProducts(data);
+                updateCartBar();
             })
-            .catch(err => console.error("Erreur chargement produits :", err));
+            .catch(err => console.error("Erreur :", err));
     }
 
-    // Recherche en temps réel
+    // Recherche
     document.getElementById('searchInput').addEventListener('keyup', (e) => {
         const term = e.target.value.toLowerCase();
         const filtered = allProducts.filter(p =>
@@ -114,7 +186,7 @@
         }, 800);
     });
 
-    // Chargement initial au démarrage de la page
+    // Chargement initial
     window.onload = loadProducts;
 </script>
 
