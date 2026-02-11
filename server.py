@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 
-# Config
+# Configuration
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
@@ -22,17 +22,23 @@ def allowed_file(filename):
 
 @app.route('/publish', methods=['POST'])
 def publish_product():
-    name = request.form.get('name')
-    price = request.form.get('price')
-    description = request.form.get('description')
-    whatsapp = request.form.get('whatsapp')
+    name = request.form.get('name', '').strip()
+    price = request.form.get('price', '').strip()
+    description = request.form.get('description', '').strip()
+    whatsapp_raw = request.form.get('whatsapp', '').strip()
     image = request.files.get('image')
+
+    # Nettoyage strict du numéro WhatsApp
+    whatsapp = ''.join(c for c in whatsapp_raw if c.isdigit())
 
     if not all([name, price, description, whatsapp, image]):
         return jsonify({'error': 'Tous les champs sont obligatoires'}), 400
 
+    if len(whatsapp) < 8 or len(whatsapp) > 15:
+        return jsonify({'error': 'Numéro WhatsApp invalide'}), 400
+
     if not allowed_file(image.filename):
-        return jsonify({'error': 'Format d\'image non supporté'}), 400
+        return jsonify({'error': 'Format d\'image non supporté (png, jpg, jpeg, gif)'}), 400
 
     filename = secure_filename(image.filename)
     path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -43,7 +49,7 @@ def publish_product():
         'name': name,
         'price': price,
         'description': description,
-        'whatsapp': whatsapp.strip().replace('+', ''),  # 24381...
+        'whatsapp': whatsapp,                    # Ex: 243812345678
         'image_url': f'/static/uploads/{filename}'
     }
 

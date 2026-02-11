@@ -30,7 +30,6 @@
 <div class="container">
     <h2 class="text-center mb-4">Produits disponibles</h2>
 
-    <!-- Barre de recherche -->
     <div class="search-bar">
         <input type="text" id="searchInput" class="form-control form-control-lg" 
                placeholder="Rechercher un produit...">
@@ -68,7 +67,6 @@
         });
     }
 
-    // Recherche en temps réel
     document.getElementById('searchInput').addEventListener('keyup', (e) => {
         const term = e.target.value.toLowerCase();
         const filtered = allProducts.filter(p => 
@@ -78,7 +76,6 @@
         renderProducts(filtered);
     });
 
-    // Chargement initial
     fetch('/products')
         .then(r => r.json())
         .then(data => {
@@ -86,9 +83,8 @@
             renderProducts(data);
         });
 
-    // Nouveau produit en temps réel
     socket.on('new_product', (product) => {
-        allProducts.unshift(product); // ajoute au début
+        allProducts.unshift(product);
         renderProducts(allProducts);
     });
 </script>
