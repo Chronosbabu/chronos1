@@ -31,6 +31,10 @@
             background-color: #198754;
             border-color: #198754;
         }
+        .shipping {
+            font-size: 0.9rem;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -43,13 +47,11 @@
         </button>
     </div>
 
-    <!-- Barre de recherche -->
     <div class="search-bar">
         <input type="text" id="searchInput" class="form-control form-control-lg" 
                placeholder="Rechercher un produit...">
     </div>
 
-    <!-- Barre du panier (apparaît dynamiquement) -->
     <div id="cartBar" class="cart-bar d-none">
         <div class="d-flex justify-content-between align-items-center">
             <span id="cartCount" class="fw-bold">0 produit sélectionné</span>
@@ -85,9 +87,10 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">${p.name}</h5>
                         <p class="card-text flex-grow-1">${p.description}</p>
-                        <strong class="mb-3">${p.price}</strong>
+                        <strong class="mb-2">${p.price} CDF</strong>
+                        <p class="shipping mb-3">Livraison : ${p.shipping_fee} CDF</p>
                         
-                        <a href="https://wa.me/${p.whatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}" 
+                        <a href="https://wa.me/${p.whatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}"
                            target="_blank" class="btn btn-success w-100 mb-3">
                            Contacter sur WhatsApp
                         </a>
@@ -106,11 +109,8 @@
     }
 
     function toggleCart(id) {
-        if (selectedIds.has(id)) {
-            selectedIds.delete(id);
-        } else {
-            selectedIds.add(id);
-        }
+        if (selectedIds.has(id)) selectedIds.delete(id);
+        else selectedIds.add(id);
         updateCartBar();
     }
 
@@ -131,24 +131,32 @@
         const selected = allProducts.filter(p => selectedIds.has(p.id));
         if (selected.length === 0) return;
 
-        // On prend le numéro WhatsApp du premier produit sélectionné
         const whatsapp = selected[0].whatsapp;
 
         let message = "Bonjour,\nJe suis intéressé par les produits suivants :\n\n";
-        let total = 0;
+        let totalProducts = 0;
+        let totalShipping = 0;
 
         selected.forEach(p => {
-            const priceNum = parseFloat(p.price.replace(/[^0-9.]/g, '')) || 0;
-            total += priceNum;
-            message += `- ${p.name} → ${p.price}\n`;
+            const price = parseFloat(p.price.replace(/[^0-9.]/g, '')) || 0;
+            const shipping = parseFloat(p.shipping_fee.replace(/[^0-9.]/g, '')) || 0;
+            totalProducts += price;
+            totalShipping += shipping;
+
+            message += `- ${p.name}\n`;
+            message += `  Prix : ${p.price} CDF\n`;
+            message += `  Livraison : ${p.shipping_fee} CDF\n\n`;
         });
 
-        message += `\nTotal : ${total} CDF\n\nMerci de me confirmer la disponibilité !`;
+        const grandTotal = totalProducts + totalShipping;
+
+        message += `Total produits : ${totalProducts} CDF\n`;
+        message += `Total livraison : ${totalShipping} CDF\n`;
+        message += `**Grand Total : ${grandTotal} CDF**\n\n`;
+        message += `Merci de me confirmer la disponibilité !`;
 
         const encodedMessage = encodeURIComponent(message);
-        const url = `https://wa.me/${whatsapp}?text=${encodedMessage}`;
-        
-        window.open(url, '_blank');
+        window.open(`https://wa.me/${whatsapp}?text=${encodedMessage}`, '_blank');
     }
 
     function loadProducts() {
@@ -162,33 +170,26 @@
             .catch(err => console.error("Erreur :", err));
     }
 
-    // Recherche
     document.getElementById('searchInput').addEventListener('keyup', (e) => {
         const term = e.target.value.toLowerCase();
         const filtered = allProducts.filter(p =>
-            p.name.toLowerCase().includes(term) ||
-            p.description.toLowerCase().includes(term)
+            p.name.toLowerCase().includes(term) || p.description.toLowerCase().includes(term)
         );
         renderProducts(filtered);
     });
 
-    // Bouton Actualiser
     document.getElementById('refreshBtn').addEventListener('click', () => {
         const btn = document.getElementById('refreshBtn');
         btn.innerHTML = 'Chargement...';
         btn.disabled = true;
-
         loadProducts();
-
         setTimeout(() => {
             btn.innerHTML = 'Actualiser les produits';
             btn.disabled = false;
         }, 800);
     });
 
-    // Chargement initial
     window.onload = loadProducts;
 </script>
-
 </body>
 </html>

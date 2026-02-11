@@ -17,17 +17,18 @@ def allowed_file(filename):
 def publish_product():
     name = request.form.get('name', '').strip()
     price = request.form.get('price', '').strip()
+    shipping_fee = request.form.get('shipping_fee', '').strip()
     description = request.form.get('description', '').strip()
     whatsapp_raw = request.form.get('whatsapp', '').strip()
     image = request.files.get('image')
 
     whatsapp = ''.join(c for c in whatsapp_raw if c.isdigit())
 
-    if not all([name, price, description, whatsapp, image]):
+    if not all([name, price, shipping_fee, description, whatsapp, image]):
         return jsonify({'error': 'Tous les champs sont obligatoires'}), 400
 
-    if len(whatsapp) < 8 or len(whatsapp) > 15:
-        return jsonify({'error': 'Numéro WhatsApp invalide'}), 400
+    if len(whatsapp) < 8 or len(whatsapp) > 15 or not whatsapp.startswith('243'):
+        return jsonify({'error': 'Le numéro WhatsApp doit commencer par 243'}), 400
 
     if not allowed_file(image.filename):
         return jsonify({'error': 'Format d\'image non supporté (png, jpg, jpeg, gif)'}), 400
@@ -40,6 +41,7 @@ def publish_product():
         'id': len(products) + 1,
         'name': name,
         'price': price,
+        'shipping_fee': shipping_fee,
         'description': description,
         'whatsapp': whatsapp,
         'image_url': f'/static/uploads/{filename}'
