@@ -2,78 +2,255 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Marketplace</title>
+    <title>Marketplace Élégant</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { padding: 20px; background: #f8f9fa; }
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 0;
+        }
+        .navbar {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #198754;
+        }
+        .hero {
+            background: #198754;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+        }
+        .search-bar {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        .search-bar input {
+            padding-left: 40px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
         .card {
-            height: 100%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: white;
         }
-        .card:hover { transform: translateY(-5px); }
-        .card img {
-            height: 180px;
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .card-img-top {
+            height: 220px;
             object-fit: cover;
+            transition: transform 0.3s ease;
         }
-        .search-bar { max-width: 600px; margin: 20px auto; }
-        .refresh-btn { font-size: 1.1rem; padding: 10px 25px; }
-        .cart-bar {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 8px;
-            padding: 12px 20px;
-            margin-bottom: 20px;
+        .card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .card-text {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #198754;
+        }
+        .shipping {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            border: none;
+            color: white;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .btn-whatsapp:hover {
+            background: #128C7E;
+        }
+        .form-check-input {
+            border-color: #198754;
         }
         .form-check-input:checked {
             background-color: #198754;
             border-color: #198754;
         }
-        .shipping {
+        .cart-bar {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-bar .fw-bold {
+            font-size: 1.1rem;
+        }
+        .btn-cart {
+            background: #198754;
+            border: none;
+            color: white;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: background 0.3s;
+        }
+        .btn-cart:hover {
+            background: #157347;
+        }
+        .refresh-btn {
+            background: #0d6efd;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .refresh-btn:hover {
+            background: #0a58ca;
+        }
+        .refresh-btn:disabled {
+            background: #6c757d;
+        }
+        .footer {
+            background: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             font-size: 0.9rem;
-            color: #666;
+            color: #6c757d;
+        }
+        /* Adaptation for sellers: Add a subtle seller info */
+        .seller-info {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+        /* Loader */
+        .loader {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            color: #6c757d;
         }
     </style>
 </head>
 <body>
 
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand" href="#">Marketplace Élégant</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pour Vendeurs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="container">
+        <h1>Bienvenue sur notre Marketplace</h1>
+        <p>Découvrez des produits de qualité, contactez les vendeurs facilement et passez commande via WhatsApp.</p>
+    </div>
+</div>
+
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Produits disponibles</h2>
-        <button id="refreshBtn" class="btn btn-primary refresh-btn">
-            Actualiser les produits
+        <button id="refreshBtn" class="btn refresh-btn">
+            Actualiser les produits <i class="fas fa-sync-alt ms-2"></i>
         </button>
     </div>
 
     <div class="search-bar">
+        <i class="fas fa-search"></i>
         <input type="text" id="searchInput" class="form-control form-control-lg" 
-               placeholder="Rechercher un produit...">
+               placeholder="Rechercher un produit par nom ou description...">
     </div>
 
     <div id="cartBar" class="cart-bar d-none">
-        <div class="d-flex justify-content-between align-items-center">
-            <span id="cartCount" class="fw-bold">0 produit sélectionné</span>
-            <button onclick="sendToWhatsApp()" class="btn btn-success">
-                Envoyer la commande sur WhatsApp
-            </button>
-        </div>
+        <span id="cartCount" class="fw-bold">0 produit sélectionné</span>
+        <button onclick="sendToWhatsApp()" class="btn btn-cart">
+            Envoyer la commande sur WhatsApp <i class="fab fa-whatsapp ms-2"></i>
+        </button>
     </div>
 
     <div id="products" class="row"></div>
+    <div id="loader" class="loader d-none">Chargement des produits...</div>
 </div>
 
+<footer class="footer">
+    <div class="container">
+        &copy; 2026 Marketplace Élégant. Tous droits réservés. | Adapté pour acheteurs et vendeurs.
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     let allProducts = [];
     let selectedIds = new Set();
 
     function renderProducts(filteredProducts) {
         const container = document.getElementById('products');
+        const loader = document.getElementById('loader');
         container.innerHTML = '';
+        loader.classList.add('d-none');
 
         if (filteredProducts.length === 0) {
-            container.innerHTML = `<p class="text-center text-muted">Aucun produit trouvé</p>`;
+            container.innerHTML = `<p class="text-center text-muted mt-4">Aucun produit trouvé. Essayez une autre recherche.</p>`;
             return;
         }
 
@@ -87,20 +264,22 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">${p.name}</h5>
                         <p class="card-text flex-grow-1">${p.description}</p>
-                        <strong class="mb-2">${p.price} CDF</strong>
-                        <p class="shipping mb-3">Livraison : ${p.shipping_fee} CDF</p>
+                        <strong class="price mb-2">${p.price} CDF</strong>
+                        <p class="shipping">Livraison : ${p.shipping_fee} CDF</p>
                         
                         <a href="https://wa.me/${p.whatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}"
-                           target="_blank" class="btn btn-success w-100 mb-3">
-                           Contacter sur WhatsApp
+                           target="_blank" class="btn btn-whatsapp w-100 mb-3">
+                           Contacter le vendeur <i class="fab fa-whatsapp ms-2"></i>
                         </a>
 
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" 
+                                   id="checkbox-${p.id}"
                                    ${isSelected ? 'checked' : ''} 
                                    onchange="toggleCart(${p.id})">
-                            <label class="form-check-label">Ajouter au panier</label>
+                            <label class="form-check-label" for="checkbox-${p.id}">Ajouter au panier</label>
                         </div>
+                        <p class="seller-info">Vendeur contact : ${p.whatsapp}</p>
                     </div>
                 </div>
             `;
@@ -131,6 +310,13 @@
         const selected = allProducts.filter(p => selectedIds.has(p.id));
         if (selected.length === 0) return;
 
+        // Check if all selected products have the same whatsapp (assuming one seller per cart for simplicity)
+        const uniqueWhatsapps = new Set(selected.map(p => p.whatsapp));
+        if (uniqueWhatsapps.size > 1) {
+            alert("Attention : Les produits sélectionnés proviennent de différents vendeurs. Veuillez sélectionner des produits d'un seul vendeur pour une commande groupée.");
+            return;
+        }
+
         const whatsapp = selected[0].whatsapp;
 
         let message = "Bonjour,\nJe suis intéressé par les produits suivants :\n\n";
@@ -160,6 +346,12 @@
     }
 
     function loadProducts() {
+        const loader = document.getElementById('loader');
+        const btn = document.getElementById('refreshBtn');
+        btn.innerHTML = 'Chargement... <i class="fas fa-spinner fa-spin ms-2"></i>';
+        btn.disabled = true;
+        loader.classList.remove('d-none');
+
         fetch('/products')
             .then(r => r.json())
             .then(data => {
@@ -167,7 +359,15 @@
                 renderProducts(data);
                 updateCartBar();
             })
-            .catch(err => console.error("Erreur :", err));
+            .catch(err => {
+                console.error("Erreur :", err);
+                alert("Erreur lors du chargement des produits. Veuillez réessayer.");
+            })
+            .finally(() => {
+                btn.innerHTML = 'Actualiser les produits <i class="fas fa-sync-alt ms-2"></i>';
+                btn.disabled = false;
+                loader.classList.add('d-none');
+            });
     }
 
     document.getElementById('searchInput').addEventListener('keyup', (e) => {
@@ -178,16 +378,7 @@
         renderProducts(filtered);
     });
 
-    document.getElementById('refreshBtn').addEventListener('click', () => {
-        const btn = document.getElementById('refreshBtn');
-        btn.innerHTML = 'Chargement...';
-        btn.disabled = true;
-        loadProducts();
-        setTimeout(() => {
-            btn.innerHTML = 'Actualiser les produits';
-            btn.disabled = false;
-        }, 800);
-    });
+    document.getElementById('refreshBtn').addEventListener('click', loadProducts);
 
     window.onload = loadProducts;
 </script>
