@@ -1,386 +1,256 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Marketplace Élégant</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 0;
-        }
-        .navbar {
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .navbar-brand {
-            font-weight: bold;
-            color: #198754;
-        }
-        .hero {
-            background: #198754;
-            color: white;
-            padding: 40px 0;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            font-size: 1.2rem;
-        }
-        .search-bar {
-            max-width: 800px;
-            margin: 0 auto 30px;
-            position: relative;
-        }
-        .search-bar input {
-            padding-left: 40px;
-            border-radius: 50px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .search-bar i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-        }
-        .card {
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background: white;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-        .card-img-top {
-            height: 220px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        .card:hover .card-img-top {
-            transform: scale(1.05);
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #333;
-        }
-        .card-text {
-            color: #6c757d;
-            font-size: 0.95rem;
-        }
-        .price {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #198754;
-        }
-        .shipping {
-            font-size: 0.85rem;
-            color: #6c757d;
-            margin-bottom: 15px;
-        }
-        .btn-whatsapp {
-            background: #25D366;
-            border: none;
-            color: white;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        .btn-whatsapp:hover {
-            background: #128C7E;
-        }
-        .form-check-input {
-            border-color: #198754;
-        }
-        .form-check-input:checked {
-            background-color: #198754;
-            border-color: #198754;
-        }
-        .cart-bar {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 10px;
-            padding: 15px 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .cart-bar .fw-bold {
-            font-size: 1.1rem;
-        }
-        .btn-cart {
-            background: #198754;
-            border: none;
-            color: white;
-            font-weight: 500;
-            padding: 10px 20px;
-            border-radius: 50px;
-            transition: background 0.3s;
-        }
-        .btn-cart:hover {
-            background: #157347;
-        }
-        .refresh-btn {
-            background: #0d6efd;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        .refresh-btn:hover {
-            background: #0a58ca;
-        }
-        .refresh-btn:disabled {
-            background: #6c757d;
-        }
-        .footer {
-            background: #ffffff;
-            padding: 20px 0;
-            text-align: center;
-            margin-top: 50px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        /* Adaptation for sellers: Add a subtle seller info */
-        .seller-info {
-            font-size: 0.85rem;
-            color: #6c757d;
-            margin-top: 10px;
-        }
-        /* Loader */
-        .loader {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1.2rem;
-            color: #6c757d;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Abonnés de {{ profile_username }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    /* ---------- GLOBAL ---------- */
+    :root {
+      --bg-color: #fafafa;
+      --text-color: #262626;
+      --border-color: #dbdbdb;
+      --card-bg: #fff;
+      --link-hover: #0095f6;
+      --shadow-color: rgba(0,0,0,0.05);
+      --button-bg: #0095f6;
+      --button-hover: #00376b;
+      --gradient-primary: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      --gradient-secondary: linear-gradient(135deg, #4dabf7 0%, #0095f6 100%);
+    }
+    [data-theme="dark"] {
+      --bg-color: #1a1a1a;
+      --text-color: #e0e0e0;
+      --border-color: #333;
+      --card-bg: #262626;
+      --link-hover: #4dabf7;
+      --shadow-color: rgba(0,0,0,0.3);
+      --button-bg: #4dabf7;
+      --button-hover: #1c6dd0;
+      --gradient-primary: linear-gradient(135deg, #c8501a 0%, #b34b26 25%, #a61e2e 50%, #991b54 75%, #8e146a 100%);
+      --gradient-secondary: linear-gradient(135deg, #3a8cc7 0%, #0077c6 100%);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    .main-container { max-width: 935px; margin: 0 auto; padding: 20px 20px 80px 20px; }
+    /* ---------- HEADER ---------- */
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 1px 2px var(--shadow-color);
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-color);
+      font-family: 'Lobster', cursive;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: nowrap;
+    }
+    .header-icons a, .header-icons button {
+      color: var(--text-color);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, transform 0.2s ease;
+      position: relative;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .header-icons a:hover, .header-icons button:hover {
+      color: var(--link-hover);
+      transform: scale(1.1);
+    }
+    /* ---------- BOTTOM NAVIGATION BAR ---------- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0;
+      z-index: 1000;
+      box-shadow: 0 -1px 2px var(--shadow-color);
+    }
+    .bottom-nav a {
+      color: var(--text-color);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, transform 0.2s ease;
+      position: relative;
+    }
+    .bottom-nav a:hover {
+      color: var(--link-hover);
+      transform: scale(1.1);
+    }
+    .bottom-nav a.active {
+      color: var(--link-hover);
+    }
+    .message-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ed4956;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 50%;
+      line-height: 1;
+      border: 2px solid var(--card-bg);
+    }
+    /* ---------- FOLLOWERS LIST ---------- */
+    .followers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px 0;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+    .follower-item {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .follower-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px var(--shadow-color);
+    }
+    .follower-avatar, .follower-avatar-fallback {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #fff;
+      margin-right: 16px;
+      transition: transform 0.2s ease;
+    }
+    .follower-avatar:hover, .follower-avatar-fallback:hover {
+      transform: scale(1.05);
+    }
+    .follower-username {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-color);
+      transition: color 0.2s ease;
+    }
+    .follower-username:hover {
+      color: var(--link-hover);
+    }
+    .no-followers {
+      font-size: 1rem;
+      color: #6b7280;
+      text-align: center;
+      padding: 16px 0;
+    }
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 600px) {
+      .main-container { padding: 16px 16px 70px 16px; }
+      .logo { font-size: 1.5rem; }
+      .header-icons { gap: 16px; }
+      .header-icons a, .header-icons button { font-size: 1.3rem; }
+      .bottom-nav { padding: 10px 0; }
+      .bottom-nav a { font-size: 1.3rem; }
+      .followers-list { padding: 16px 0; }
+      .follower-item { padding: 10px 12px; }
+      .follower-avatar, .follower-avatar-fallback { width: 40px; height: 40px; font-size: 1rem; margin-right: 12px; }
+      .follower-username { font-size: 0.95rem; }
+    }
+  </style>
 </head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container">
-        <a class="navbar-brand" href="#">Marketplace Élégant</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Accueil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pour Vendeurs</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-            </ul>
-        </div>
+<body data-username="{{ current_username }}" data-theme="light">
+  <div class="main-container">
+    <header class="main-header">
+      <h2 class="logo" style="display:none;">x-command</h2>
+      <nav class="header-icons" style="display:none;">
+        <a href="{{ url_for('index') }}" title="Accueil"><i class="fa-solid fa-house"></i></a>
+        <a href="{{ url_for('add_post') }}" title="Nouvelle publication"><i class="fa-solid fa-circle-plus"></i></a>
+        <a href="{{ url_for('profile', username=current_username) }}" title="Profil"><i class="fa-regular fa-user"></i></a>
+        <a href="{{ url_for('conversations') }}" title="Messages" id="messages-link">
+          <i class="fa-regular fa-message"></i>
+          <span class="message-badge" id="unread-count" style="display:none;">0</span>
+        </a>
+      </nav>
+    </header>
+    <h1 style="text-align: center; margin: 20px 0;">Abonnés de @{{ profile_username }}</h1>
+    <div class="followers-list">
+      {% if followers|length == 0 %}
+        <p class="no-followers">Aucun abonné pour l’instant.</p>
+      {% else %}
+        {% for follower in followers %}
+          <a href="{{ url_for('profile', username=follower.username) }}" class="follower-item">
+            {% if follower.avatar %}
+              <img src="{{ url_for('avatar_file', filename=follower.avatar) }}?t={{ 'now'|timestamp }}" alt="avatar" class="follower-avatar" />
+            {% else %}
+              <div class="follower-avatar-fallback">{{ follower.username[:1]|upper }}</div>
+            {% endif %}
+            <span class="follower-username">@{{ follower.username }}</span>
+          </a>
+        {% endfor %}
+      {% endif %}
     </div>
-</nav>
-
-<div class="hero">
-    <div class="container">
-        <h1>Bienvenue sur notre Marketplace</h1>
-        <p>Découvrez des produits de qualité, contactez les vendeurs facilement et passez commande via WhatsApp.</p>
-    </div>
-</div>
-
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Produits disponibles</h2>
-        <button id="refreshBtn" class="btn refresh-btn">
-            Actualiser les produits <i class="fas fa-sync-alt ms-2"></i>
-        </button>
-    </div>
-
-    <div class="search-bar">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" class="form-control form-control-lg" 
-               placeholder="Rechercher un produit par nom ou description...">
-    </div>
-
-    <div id="cartBar" class="cart-bar d-none">
-        <span id="cartCount" class="fw-bold">0 produit sélectionné</span>
-        <button onclick="sendToWhatsApp()" class="btn btn-cart">
-            Envoyer la commande sur WhatsApp <i class="fab fa-whatsapp ms-2"></i>
-        </button>
-    </div>
-
-    <div id="products" class="row"></div>
-    <div id="loader" class="loader d-none">Chargement des produits...</div>
-</div>
-
-<footer class="footer">
-    <div class="container">
-        &copy; 2026 Marketplace Élégant. Tous droits réservés. | Adapté pour acheteurs et vendeurs.
-    </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    let allProducts = [];
-    let selectedIds = new Set();
-
-    function renderProducts(filteredProducts) {
-        const container = document.getElementById('products');
-        const loader = document.getElementById('loader');
-        container.innerHTML = '';
-        loader.classList.add('d-none');
-
-        if (filteredProducts.length === 0) {
-            container.innerHTML = `<p class="text-center text-muted mt-4">Aucun produit trouvé. Essayez une autre recherche.</p>`;
-            return;
-        }
-
-        filteredProducts.forEach(p => {
-            const isSelected = selectedIds.has(p.id);
-            const col = document.createElement('div');
-            col.className = 'col-lg-3 col-md-4 col-sm-6 mb-4';
-            col.innerHTML = `
-                <div class="card h-100">
-                    <img src="${p.image_url}" class="card-img-top" alt="${p.name}">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">${p.name}</h5>
-                        <p class="card-text flex-grow-1">${p.description}</p>
-                        <strong class="price mb-2">${p.price} CDF</strong>
-                        <p class="shipping">Livraison : ${p.shipping_fee} CDF</p>
-                        
-                        <a href="https://wa.me/${p.whatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}"
-                           target="_blank" class="btn btn-whatsapp w-100 mb-3">
-                           Contacter le vendeur <i class="fab fa-whatsapp ms-2"></i>
-                        </a>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" 
-                                   id="checkbox-${p.id}"
-                                   ${isSelected ? 'checked' : ''} 
-                                   onchange="toggleCart(${p.id})">
-                            <label class="form-check-label" for="checkbox-${p.id}">Ajouter au panier</label>
-                        </div>
-                        <p class="seller-info">Vendeur contact : ${p.whatsapp}</p>
-                    </div>
-                </div>
-            `;
-            container.appendChild(col);
-        });
-    }
-
-    function toggleCart(id) {
-        if (selectedIds.has(id)) selectedIds.delete(id);
-        else selectedIds.add(id);
-        updateCartBar();
-    }
-
-    function updateCartBar() {
-        const count = selectedIds.size;
-        const cartBar = document.getElementById('cartBar');
-        const cartCount = document.getElementById('cartCount');
-
-        if (count > 0) {
-            cartBar.classList.remove('d-none');
-            cartCount.textContent = `${count} produit${count > 1 ? 's' : ''} sélectionné${count > 1 ? 's' : ''}`;
-        } else {
-            cartBar.classList.add('d-none');
-        }
-    }
-
-    function sendToWhatsApp() {
-        const selected = allProducts.filter(p => selectedIds.has(p.id));
-        if (selected.length === 0) return;
-
-        // Check if all selected products have the same whatsapp (assuming one seller per cart for simplicity)
-        const uniqueWhatsapps = new Set(selected.map(p => p.whatsapp));
-        if (uniqueWhatsapps.size > 1) {
-            alert("Attention : Les produits sélectionnés proviennent de différents vendeurs. Veuillez sélectionner des produits d'un seul vendeur pour une commande groupée.");
-            return;
-        }
-
-        const whatsapp = selected[0].whatsapp;
-
-        let message = "Bonjour,\nJe suis intéressé par les produits suivants :\n\n";
-        let totalProducts = 0;
-        let totalShipping = 0;
-
-        selected.forEach(p => {
-            const price = parseFloat(p.price.replace(/[^0-9.]/g, '')) || 0;
-            const shipping = parseFloat(p.shipping_fee.replace(/[^0-9.]/g, '')) || 0;
-            totalProducts += price;
-            totalShipping += shipping;
-
-            message += `- ${p.name}\n`;
-            message += `  Prix : ${p.price} CDF\n`;
-            message += `  Livraison : ${p.shipping_fee} CDF\n\n`;
-        });
-
-        const grandTotal = totalProducts + totalShipping;
-
-        message += `Total produits : ${totalProducts} CDF\n`;
-        message += `Total livraison : ${totalShipping} CDF\n`;
-        message += `**Grand Total : ${grandTotal} CDF**\n\n`;
-        message += `Merci de me confirmer la disponibilité !`;
-
-        const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/${whatsapp}?text=${encodedMessage}`, '_blank');
-    }
-
-    function loadProducts() {
-        const loader = document.getElementById('loader');
-        const btn = document.getElementById('refreshBtn');
-        btn.innerHTML = 'Chargement... <i class="fas fa-spinner fa-spin ms-2"></i>';
-        btn.disabled = true;
-        loader.classList.remove('d-none');
-
-        fetch('/products')
-            .then(r => r.json())
-            .then(data => {
-                allProducts = data;
-                renderProducts(data);
-                updateCartBar();
-            })
-            .catch(err => {
-                console.error("Erreur :", err);
-                alert("Erreur lors du chargement des produits. Veuillez réessayer.");
-            })
-            .finally(() => {
-                btn.innerHTML = 'Actualiser les produits <i class="fas fa-sync-alt ms-2"></i>';
-                btn.disabled = false;
-                loader.classList.add('d-none');
-            });
-    }
-
-    document.getElementById('searchInput').addEventListener('keyup', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = allProducts.filter(p =>
-            p.name.toLowerCase().includes(term) || p.description.toLowerCase().includes(term)
-        );
-        renderProducts(filtered);
-    });
-
-    document.getElementById('refreshBtn').addEventListener('click', loadProducts);
-
-    window.onload = loadProducts;
-</script>
+    <nav class="bottom-nav" style="display:none;">
+      <a href="{{ url_for('notifications') }}" title="Notifications" id="notifications-link">
+        <i class="fa-regular fa-bell"></i>
+        <span class="message-badge" id="notifications-count" style="display:none;">0</span>
+      </a>
+      <a href="{{ url_for('search_users') }}" title="Rechercher"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="{{ url_for('login') }}" title="Déconnexion" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i></a>
+    </nav>
+  </div>
+  <script>
+  const socket = io();
+  // Theme toggle functionality
+  const body = document.body;
+  function setTheme(theme) {
+    body.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
+  }
+  // Load saved theme or default to light
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  setTheme(savedTheme);
+  </script>
 </body>
 </html>
