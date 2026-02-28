@@ -97,4 +97,6 @@ if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     os.makedirs('static/apks', exist_ok=True)
     load_products()                    # ← Chargement au démarrage
-    app.run(host='0.0.0.0', port=5000)
+    # Correction : utiliser le port dynamique pour Render (évite les problèmes d'exposition)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)

@@ -325,7 +325,8 @@
         btn.innerHTML = 'Chargement... <i class="fas fa-spinner fa-spin ms-2"></i>';
         btn.disabled = true;
         loader.classList.remove('d-none');
-        fetch('/products')
+        // Correction : ajouter un timestamp pour éviter le cache sur la requête /products
+        fetch('/products?t=' + new Date().getTime())
             .then(r => r.json())
             .then(data => {
                 allProducts = data;
