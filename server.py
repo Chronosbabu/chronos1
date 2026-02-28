@@ -54,15 +54,11 @@ def get_products():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-# ==================== ROUTES CHRONOS (inchangées) ====================
+# ==================== ROUTES CHRONOS ====================
 @app.route("/")
 def home():
     apps = [
-        {
-            "name": "Mon App",
-            "apk": "mon_app_v2.apk",
-            "icon": "mon_app.png"
-        }
+        {"name": "Mon App", "apk": "mon_app_v2.apk", "icon": "mon_app.png"}
     ]
     return render_template("index.html", apps=apps)
 
@@ -70,14 +66,13 @@ def home():
 def download(apk):
     return send_from_directory("static/apks", apk, as_attachment=True)
 
-# ==================== NOUVELLE ROUTE : X-COMMAND (pour l'app + bouton du site) ====================
+# ==================== ROUTE X-COMMAND (CORRIGÉE) ====================
 @app.route("/xcommand")
 def xcommand():
-    return send_from_directory('web', 'style.html')
+    return render_template("style.html")   # ← maintenant dans templates/
 
 # ==================== LANCEMENT ====================
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    os.makedirs('static/apks', exist_ok=True)      # pour ton APK
-    os.makedirs('web', exist_ok=True)              # pour style.html
-    app.run(host='0.0.0.0', port=5000)             # un seul port maintenant
+    os.makedirs('static/apks', exist_ok=True)
+    app.run(host='0.0.0.0', port=5000)
