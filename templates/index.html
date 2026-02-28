@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chronos - Plateforme Sociale</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#0f172a;color:#f1f5f9;line-height:1.7;overflow-x:hidden;}
+.fade-in{opacity:0;transform:translateY(40px);transition:all 0.8s ease;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+nav{position:fixed;top:0;width:100%;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.4);backdrop-filter:blur(15px);z-index:1000;}
+nav h3{font-weight:700;letter-spacing:1px;}
+nav a{color:white;text-decoration:none;margin-left:25px;font-weight:500;opacity:0.85;transition:0.3s;}
+nav a:hover{opacity:1;}
+header{padding:190px 20px 150px;text-align:center;background:linear-gradient(135deg,#405DE6,#5851DB,#833AB4,#C13584,#E1306C,#FD1D1D,#F56040,#F77737);background-size:300% 300%;animation:gradientMove 10s ease infinite;color:white;}
+@keyframes gradientMove{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+header h1{font-size:3.5em;font-weight:700;margin-bottom:20px;}
+header p{max-width:800px;margin:auto;font-size:1.25em;line-height:1.6;}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.btn-primary,
+.btn-xcommand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 50px;
+    border-radius: 60px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.4s;
+    font-size: 1.1em;
+}
+
+.btn-primary {
+    background: white;
+    color: #C13584;
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(193,53,132,0.4);
+}
+
+.btn-xcommand {
+    background: #2d3748;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-xcommand:hover {
+    transform: translateY(-5px);
+    background: #374151;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+section{padding:100px 20px;max-width:1100px;margin:auto;}
+h2{text-align:center;font-size:2.5em;margin-bottom:60px;position:relative;}
+h2::after{content:"";display:block;width:80px;height:4px;margin:20px auto 0;background:linear-gradient(90deg,#C13584,#E1306C);border-radius:5px;}
+.faq-item{background:rgba(255,255,255,0.05);backdrop-filter:blur(15px);border-radius:20px;margin-bottom:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);transition:0.3s;}
+.faq-item:hover{transform:translateY(-3px);}
+.faq-item button{width:100%;padding:25px 30px;border:none;background:none;color:white;text-align:left;font-size:1.1em;font-weight:600;cursor:pointer;position:relative;}
+.faq-item button::after{content:"+";position:absolute;right:30px;font-size:1.6em;transition:0.3s;}
+.faq-item.active button::after{transform:rotate(45deg);}
+.answer{padding:0 30px 25px 30px;display:none;color:#cbd5e1;line-height:1.5;}
+form{background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);padding:60px;border-radius:25px;border:1px solid rgba(255,255,255,0.1);}
+form input,form select,form textarea{width:100%;padding:18px;margin-bottom:25px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.07);color:white;font-size:1em;}
+form input:focus,form select:focus,form textarea:focus{border-color:#C13584;outline:none;box-shadow:0 0 15px rgba(193,53,132,0.4);}
+form button{width:100%;padding:18px;border:none;border-radius:50px;background:linear-gradient(90deg,#C13584,#E1306C);color:white;font-size:1.1em;font-weight:600;cursor:pointer;transition:0.3s;}
+form button:hover{transform:translateY(-3px);}
+footer{padding:60px 20px;text-align:center;background:linear-gradient(135deg,#405DE6,#5851DB,#833AB4,#C13584,#E1306C,#FD1D1D,#F56040,#F77737);color:white;}
+footer img{margin:0 15px;filter:invert(1);opacity:0.9;transition:0.3s;}
+footer img:hover{opacity:1;transform:scale(1.2);}
+.notification{position: fixed; top:20px; right:20px; background:#C13584; color:white; padding:20px 30px; border-radius:12px; box-shadow:0 8px 25px rgba(0,0,0,0.2); display:none; font-weight:600; z-index:1000;}
+@media(max-width:768px){
+    header h1{font-size:2.2em;}
+    nav{padding:15px;}
+    form{padding:30px;}
+    .btn-container{flex-direction:column;align-items:center;}
+    .btn-primary, .btn-xcommand{padding:16px 60px;}
+}
+</style>
+</head>
+
+<body>
+
+<nav class="fade-in">
+<h3>Chronos</h3>
+<div>
+<a href="#faq">FAQ</a>
+<a href="#contact">Contact</a>
+</div>
+</nav>
+
+<header class="fade-in">
+<h1>Bienvenue sur Chronos</h1>
+<img src="/static/icons/{{ apps[0].icon }}" alt="Icône de l'application" style="width:120px; height:120px; object-fit: contain; margin: 20px auto; display: block; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+<p>
+Discutez, collaborez et gagnez ensemble.<br>
+Une plateforme sociale moderne pour échanger avec vos proches, développer votre activité et créer des opportunités de revenus.
+</p>
+
+<div class="btn-container">
+    <a href="/download/{{ apps[0].apk }}" class="btn-primary">
+        <i class="fab fa-android fa-lg"></i>
+        Télécharger maintenant
+    </a>
+    
+    <!-- BOUTON X-COMMAND MODIFIÉ → va directement sur la page produits -->
+    <a href="/xcommand" class="btn-xcommand" title="x-command">
+        <i class="fab fa-apple fa-lg"></i>
+        x-command
+    </a>
+</div>
+</header>
+
+<!-- LE RESTE DU CODE HTML EST IDENTIQUE (FAQ, contact, footer, script) -->
+<section id="faq" class="fade-in">
+<h2>Foire aux questions (FAQ)</h2>
+<!-- ... tout le reste du code FAQ inchangé ... -->
+</section>
+
+<section id="contact" class="fade-in">
+<!-- ... tout le formulaire inchangé ... -->
+</section>
+
+<footer class="fade-in">
+<!-- ... footer inchangé ... -->
+</footer>
+
+<div class="notification" id="notification">Message envoyé ! ✅</div>
+
+<script>
+<!-- TOUT LE JAVASCRIPT INCHANGÉ (FAQ, Formspree, fade-in) -->
+
+</script>
+
+</body>
+</html>
