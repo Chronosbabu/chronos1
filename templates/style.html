@@ -10,10 +10,11 @@
         body { background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; }
         .navbar { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .navbar-brand { font-weight: bold; color: #198754; }
-        .hero { background: #198754; color: white; padding: 40px 0; text-align: center; margin-bottom: 30px; }
-        .hero h1 { font-size: 2.5rem; }
-        .city-selector { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 30px; }
-        .city-btn { font-size: 1.3rem; padding: 15px 30px; border-radius: 50px; margin: 10px; }
+        .hero { background: #198754; color: white; padding: 50px 0; text-align: center; }
+        .hero h1 { font-size: 2.8rem; }
+        .city-selector { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 30px auto; max-width: 700px; }
+        .city-btn { font-size: 1.4rem; padding: 18px 40px; border-radius: 50px; margin: 12px; }
+        .products-section { display: none; }
         .card { border: none; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s; }
         .card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
         .card-img-top { height: 220px; object-fit: cover; }
@@ -33,47 +34,50 @@
 <div class="hero">
     <div class="container">
         <h1>Bienvenue sur X-command</h1>
-        <p>Découvrez des produits locaux et contactez les vendeurs via WhatsApp</p>
+        <p>Découvrez les meilleurs produits locaux près de chez vous</p>
     </div>
 </div>
 
 <div class="container">
-    <!-- SÉLECTEUR DE VILLE TRÈS VISIBLE -->
+    <!-- PAGE PRINCIPALE : UNIQUEMENT SÉLECTION DE VILLE -->
     <div id="citySelector" class="city-selector text-center">
-        <h3 class="mb-4">📍 Choisissez votre ville pour voir uniquement les produits locaux</h3>
+        <h3 class="mb-4">📍 Choisissez votre ville</h3>
         <div class="d-flex justify-content-center flex-wrap gap-3">
             <button onclick="selectCity('BUKAVU')" class="btn btn-success city-btn">BUKAVU</button>
             <button onclick="selectCity('LUBUMBASHI')" class="btn btn-success city-btn">LUBUMBASHI</button>
             <button onclick="selectCity('KINDI')" class="btn btn-success city-btn">KINDI</button>
         </div>
-        <p class="text-muted mt-3">Seuls les produits de la ville sélectionnée seront affichés</p>
+        <p class="text-muted mt-4">Seuls les produits de la ville choisie seront affichés</p>
     </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 id="productsTitle" class="mb-0">Produits disponibles</h2>
-        <div>
-            <button id="changeCityBtn" onclick="showCitySelector()" class="btn btn-outline-success me-2">Changer de ville</button>
-            <button id="refreshBtn" class="btn refresh-btn">
-                Actualiser <i class="fas fa-sync-alt ms-2"></i>
-            </button>
+    <!-- SECTION PRODUITS (cachée au départ) -->
+    <div id="productsSection" class="products-section">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 id="productsTitle" class="mb-0">Produits disponibles</h2>
+            <div>
+                <button onclick="showCitySelector()" class="btn btn-outline-success me-2">Changer de ville</button>
+                <button id="refreshBtn" class="btn btn-primary">
+                    Actualiser <i class="fas fa-sync-alt ms-2"></i>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <div class="search-bar mb-4">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Rechercher dans votre ville...">
-    </div>
+        <div class="search-bar mb-4">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Rechercher dans votre ville...">
+        </div>
 
-    <div id="cartBar" class="cart-bar d-none p-3">
-        <span id="cartCount" class="fw-bold">0 produit sélectionné</span>
-        <button onclick="sendToWhatsApp()" class="btn btn-cart">Envoyer la commande <i class="fab fa-whatsapp ms-2"></i></button>
-    </div>
+        <div id="cartBar" class="cart-bar d-none p-3 mb-4">
+            <span id="cartCount" class="fw-bold">0 produit sélectionné</span>
+            <button onclick="sendToWhatsApp()" class="btn btn-cart">Envoyer la commande <i class="fab fa-whatsapp ms-2"></i></button>
+        </div>
 
-    <div id="products" class="row"></div>
-    <div id="loader" class="text-center my-5 d-none">Chargement...</div>
+        <div id="products" class="row"></div>
+        <div id="loader" class="text-center my-5 d-none">Chargement des produits...</div>
+    </div>
 </div>
 
-<footer class="footer text-center py-4 mt-5">
+<footer class="text-center py-4 mt-5 text-muted">
     © 2026 X-command - Tous droits réservés
 </footer>
 
@@ -86,14 +90,15 @@
     function selectCity(city) {
         selectedCity = city;
         localStorage.setItem('selectedCity', city);
-        document.getElementById('citySelector').classList.add('d-none');
+        document.getElementById('citySelector').style.display = 'none';
+        document.getElementById('productsSection').style.display = 'block';
         document.getElementById('productsTitle').textContent = `Produits à ${city}`;
         loadProducts(city);
     }
 
     function showCitySelector() {
-        document.getElementById('citySelector').classList.remove('d-none');
-        document.getElementById('products').innerHTML = '';
+        document.getElementById('productsSection').style.display = 'none';
+        document.getElementById('citySelector').style.display = 'block';
     }
 
     function renderProducts(filteredProducts) {
@@ -144,7 +149,7 @@
         } else bar.classList.add('d-none');
     }
 
-    function sendToWhatsApp() { /* inchangé */ 
+    function sendToWhatsApp() {
         const selected = allProducts.filter(p => selectedIds.has(p.id));
         if (selected.length === 0) return;
         const uniqueWhatsapps = new Set(selected.map(p => p.whatsapp));
@@ -165,19 +170,16 @@
         window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    function loadProducts(city = null) {
+    function loadProducts(city) {
         const loader = document.getElementById('loader');
         const btn = document.getElementById('refreshBtn');
         btn.disabled = true;
         loader.classList.remove('d-none');
 
-        let url = `/products?t=${new Date().getTime()}`;
-        if (city) url += `&city=${encodeURIComponent(city)}`;
-
-        fetch(url)
+        fetch(`/products?city=${encodeURIComponent(city)}&t=${new Date().getTime()}`)
             .then(r => r.json())
             .then(data => {
-                allProducts = data;
+                allProducts = data;           // déjà trié nouveau → ancien grâce au serveur
                 renderProducts(data);
                 updateCartBar();
             })
@@ -196,13 +198,16 @@
         renderProducts(filtered);
     });
 
-    document.getElementById('refreshBtn').addEventListener('click', () => loadProducts(selectedCity));
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        if (selectedCity) loadProducts(selectedCity);
+    });
 
+    // Au chargement : on affiche TOUJOURS d'abord la page de sélection de ville
     window.onload = () => {
         if (selectedCity) {
-            document.getElementById('citySelector').classList.add('d-none');
-            document.getElementById('productsTitle').textContent = `Produits à ${selectedCity}`;
-            loadProducts(selectedCity);
+            selectCity(selectedCity);   // auto-sélection si déjà choisi auparavant
+        } else {
+            document.getElementById('citySelector').style.display = 'block';
         }
     };
 </script>

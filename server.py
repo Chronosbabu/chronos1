@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 PRODUCTS_FILE = 'products.json'
-
 ALLOWED_CITIES = ['BUKAVU', 'LUBUMBASHI', 'KINDI']
 
 products = []
@@ -76,7 +75,6 @@ def publish_product():
 
     products.append(product)
     save_products()
-
     return jsonify({'message': 'Produit publié avec succès', 'product': product})
 
 @app.route('/products')
@@ -84,8 +82,12 @@ def get_products():
     city_filter = request.args.get('city', '').strip().upper()
     if city_filter and city_filter in ALLOWED_CITIES:
         filtered = [p for p in products if p.get('city') == city_filter]
-        return jsonify(filtered)
-    return jsonify(products)
+    else:
+        filtered = products
+
+    # NOUVEAUTÉ : les produits les plus récents en premier (tri par ID descendant)
+    filtered_sorted = sorted(filtered, key=lambda p: p['id'], reverse=True)
+    return jsonify(filtered_sorted)
 
 @app.route('/my_products')
 def my_products():
@@ -93,7 +95,7 @@ def my_products():
     if not whatsapp:
         return jsonify([])
     my_prods = [p for p in products if p['whatsapp'] == whatsapp]
-    return jsonify(my_prods)
+    return jsonify(sorted(my_prods, key=lambda p: p['id'], reverse=True))
 
 @app.route('/delete_product', methods=['POST'])
 def delete_product():
@@ -109,7 +111,6 @@ def delete_product():
         global products
         for i, p in enumerate(products):
             if p['id'] == prod_id and p['whatsapp'] == whatsapp:
-                # Suppression du fichier image (optionnel mais propre)
                 try:
                     img_path = p['image_url'].replace('/static/uploads/', '')
                     os.remove(os.path.join(app.config['UPLOAD_FOLDER'], img_path))
