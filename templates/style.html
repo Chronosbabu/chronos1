@@ -7,239 +7,100 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 0;
-        }
-        .navbar {
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .navbar-brand {
-            font-weight: bold;
-            color: #198754;
-        }
-        .hero {
-            background: #198754;
-            color: white;
-            padding: 40px 0;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            font-size: 1.2rem;
-        }
-        .search-bar {
-            max-width: 800px;
-            margin: 0 auto 30px;
-            position: relative;
-        }
-        .search-bar input {
-            padding-left: 40px;
-            border-radius: 50px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .search-bar i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-        }
-        .card {
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background: white;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-        .card-img-top {
-            height: 220px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        .card:hover .card-img-top {
-            transform: scale(1.05);
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #333;
-        }
-        .card-text {
-            color: #6c757d;
-            font-size: 0.95rem;
-        }
-        .price {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #198754;
-        }
-        .shipping {
-            font-size: 0.85rem;
-            color: #6c757d;
-            margin-bottom: 15px;
-        }
-        .btn-whatsapp {
-            background: #25D366;
-            border: none;
-            color: white;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        .btn-whatsapp:hover {
-            background: #128C7E;
-        }
-        .form-check-input {
-            border-color: #198754;
-        }
-        .form-check-input:checked {
-            background-color: #198754;
-            border-color: #198754;
-        }
-        .cart-bar {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 10px;
-            padding: 15px 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .cart-bar .fw-bold {
-            font-size: 1.1rem;
-        }
-        .btn-cart {
-            background: #198754;
-            border: none;
-            color: white;
-            font-weight: 500;
-            padding: 10px 20px;
-            border-radius: 50px;
-            transition: background 0.3s;
-        }
-        .btn-cart:hover {
-            background: #157347;
-        }
-        .refresh-btn {
-            background: #0d6efd;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        .refresh-btn:hover {
-            background: #0a58ca;
-        }
-        .refresh-btn:disabled {
-            background: #6c757d;
-        }
-        .footer {
-            background: #ffffff;
-            padding: 20px 0;
-            text-align: center;
-            margin-top: 50px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        /* Adaptation for sellers: Add a subtle seller info */
-        .seller-info {
-            font-size: 0.85rem;
-            color: #6c757d;
-            margin-top: 10px;
-        }
-        /* Loader */
-        .loader {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1.2rem;
-            color: #6c757d;
-        }
+        body { background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; }
+        .navbar { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .navbar-brand { font-weight: bold; color: #198754; }
+        .hero { background: #198754; color: white; padding: 40px 0; text-align: center; margin-bottom: 30px; }
+        .hero h1 { font-size: 2.5rem; }
+        .city-selector { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 30px; }
+        .city-btn { font-size: 1.3rem; padding: 15px 30px; border-radius: 50px; margin: 10px; }
+        .card { border: none; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
+        .card-img-top { height: 220px; object-fit: cover; }
+        .price { color: #198754; font-weight: bold; }
+        .btn-whatsapp { background: #25D366; }
+        .btn-whatsapp:hover { background: #128C7E; }
+        .cart-bar { background: #d4edda; border: 1px solid #c3e6cb; }
     </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
         <a class="navbar-brand" href="#">X-command</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Accueil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pour Vendeurs</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-            </ul>
-        </div>
     </div>
 </nav>
+
 <div class="hero">
     <div class="container">
         <h1>Bienvenue sur X-command</h1>
-        <p>Découvrez des produits de qualité, contactez les vendeurs facilement et passez commande via WhatsApp.</p>
+        <p>Découvrez des produits locaux et contactez les vendeurs via WhatsApp</p>
     </div>
 </div>
+
 <div class="container">
+    <!-- SÉLECTEUR DE VILLE TRÈS VISIBLE -->
+    <div id="citySelector" class="city-selector text-center">
+        <h3 class="mb-4">📍 Choisissez votre ville pour voir uniquement les produits locaux</h3>
+        <div class="d-flex justify-content-center flex-wrap gap-3">
+            <button onclick="selectCity('BUKAVU')" class="btn btn-success city-btn">BUKAVU</button>
+            <button onclick="selectCity('LUBUMBASHI')" class="btn btn-success city-btn">LUBUMBASHI</button>
+            <button onclick="selectCity('KINDI')" class="btn btn-success city-btn">KINDI</button>
+        </div>
+        <p class="text-muted mt-3">Seuls les produits de la ville sélectionnée seront affichés</p>
+    </div>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Produits disponibles</h2>
-        <button id="refreshBtn" class="btn refresh-btn">
-            Actualiser les produits <i class="fas fa-sync-alt ms-2"></i>
-        </button>
+        <h2 id="productsTitle" class="mb-0">Produits disponibles</h2>
+        <div>
+            <button id="changeCityBtn" onclick="showCitySelector()" class="btn btn-outline-success me-2">Changer de ville</button>
+            <button id="refreshBtn" class="btn refresh-btn">
+                Actualiser <i class="fas fa-sync-alt ms-2"></i>
+            </button>
+        </div>
     </div>
-    <div class="search-bar">
+
+    <div class="search-bar mb-4">
         <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" class="form-control form-control-lg"
-               placeholder="Rechercher un produit par nom ou description...">
+        <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Rechercher dans votre ville...">
     </div>
-    <div id="cartBar" class="cart-bar d-none">
+
+    <div id="cartBar" class="cart-bar d-none p-3">
         <span id="cartCount" class="fw-bold">0 produit sélectionné</span>
-        <button onclick="sendToWhatsApp()" class="btn btn-cart">
-            Envoyer la commande sur WhatsApp <i class="fab fa-whatsapp ms-2"></i>
-        </button>
+        <button onclick="sendToWhatsApp()" class="btn btn-cart">Envoyer la commande <i class="fab fa-whatsapp ms-2"></i></button>
     </div>
+
     <div id="products" class="row"></div>
-    <div id="loader" class="loader d-none">Chargement des produits...</div>
+    <div id="loader" class="text-center my-5 d-none">Chargement...</div>
 </div>
-<footer class="footer">
-    <div class="container">
-        &copy; 2026 X-command. Tous droits réservés. | Adapté pour acheteurs et vendeurs.
-    </div>
+
+<footer class="footer text-center py-4 mt-5">
+    © 2026 X-command - Tous droits réservés
 </footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     let allProducts = [];
     let selectedIds = new Set();
+    let selectedCity = localStorage.getItem('selectedCity') || null;
+
+    function selectCity(city) {
+        selectedCity = city;
+        localStorage.setItem('selectedCity', city);
+        document.getElementById('citySelector').classList.add('d-none');
+        document.getElementById('productsTitle').textContent = `Produits à ${city}`;
+        loadProducts(city);
+    }
+
+    function showCitySelector() {
+        document.getElementById('citySelector').classList.remove('d-none');
+        document.getElementById('products').innerHTML = '';
+    }
+
     function renderProducts(filteredProducts) {
         const container = document.getElementById('products');
-        const loader = document.getElementById('loader');
         container.innerHTML = '';
-        loader.classList.add('d-none');
         if (filteredProducts.length === 0) {
-            container.innerHTML = `<p class="text-center text-muted mt-4">Aucun produit trouvé. Essayez une autre recherche.</p>`;
+            container.innerHTML = `<p class="text-center text-muted mt-5">Aucun produit trouvé dans cette ville.</p>`;
             return;
         }
         filteredProducts.forEach(p => {
@@ -254,95 +115,79 @@
                         <p class="card-text flex-grow-1">${p.description}</p>
                         <strong class="price mb-2">${p.price} CDF</strong>
                         <p class="shipping">Livraison : ${p.shipping_fee} CDF</p>
-                       
-                        <a href="https://wa.me/${p.whatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}"
-                           target="_blank" class="btn btn-whatsapp w-100 mb-3">
-                           Contacter le vendeur <i class="fab fa-whatsapp ms-2"></i>
+                        <a href="https://wa.me/${p.whatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}" target="_blank" class="btn btn-whatsapp w-100 mb-3">
+                            Contacter <i class="fab fa-whatsapp ms-2"></i>
                         </a>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox"
-                                   id="checkbox-${p.id}"
-                                   ${isSelected ? 'checked' : ''}
-                                   onchange="toggleCart(${p.id})">
-                            <label class="form-check-label" for="checkbox-${p.id}">Ajouter au panier</label>
+                            <input class="form-check-input" type="checkbox" id="cb-${p.id}" ${isSelected?'checked':''} onchange="toggleCart(${p.id})">
+                            <label class="form-check-label" for="cb-${p.id}">Ajouter au panier</label>
                         </div>
-                        <p class="seller-info">Vendeur contact : ${p.whatsapp}</p>
                     </div>
                 </div>
             `;
             container.appendChild(col);
         });
     }
+
     function toggleCart(id) {
-        if (selectedIds.has(id)) selectedIds.delete(id);
-        else selectedIds.add(id);
+        if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
         updateCartBar();
     }
+
     function updateCartBar() {
         const count = selectedIds.size;
-        const cartBar = document.getElementById('cartBar');
-        const cartCount = document.getElementById('cartCount');
+        const bar = document.getElementById('cartBar');
+        const txt = document.getElementById('cartCount');
         if (count > 0) {
-            cartBar.classList.remove('d-none');
-            cartCount.textContent = `${count} produit${count > 1 ? 's' : ''} sélectionné${count > 1 ? 's' : ''}`;
-        } else {
-            cartBar.classList.add('d-none');
-        }
+            bar.classList.remove('d-none');
+            txt.textContent = `${count} produit${count>1?'s':''} sélectionné${count>1?'s':''}`;
+        } else bar.classList.add('d-none');
     }
-    function sendToWhatsApp() {
+
+    function sendToWhatsApp() { /* inchangé */ 
         const selected = allProducts.filter(p => selectedIds.has(p.id));
         if (selected.length === 0) return;
-        // Check if all selected products have the same whatsapp (assuming one seller per cart for simplicity)
         const uniqueWhatsapps = new Set(selected.map(p => p.whatsapp));
         if (uniqueWhatsapps.size > 1) {
-            alert("Attention : Les produits sélectionnés proviennent de différents vendeurs. Veuillez sélectionner des produits d'un seul vendeur pour une commande groupée.");
+            alert("Les produits proviennent de vendeurs différents. Sélectionnez un seul vendeur.");
             return;
         }
         const whatsapp = selected[0].whatsapp;
-        let message = "Bonjour,\nJe suis intéressé par les produits suivants :\n\n";
-        let totalProducts = 0;
-        let totalShipping = 0;
+        let message = "Bonjour,\nJe suis intéressé par :\n\n";
+        let totalP = 0, totalS = 0;
         selected.forEach(p => {
-            const price = parseFloat(p.price.replace(/[^0-9.]/g, '')) || 0;
-            const shipping = parseFloat(p.shipping_fee.replace(/[^0-9.]/g, '')) || 0;
-            totalProducts += price;
-            totalShipping += shipping;
-            message += `- ${p.name}\n`;
-            message += ` Prix : ${p.price} CDF\n`;
-            message += ` Livraison : ${p.shipping_fee} CDF\n\n`;
+            const price = parseFloat(p.price.replace(/[^0-9.]/g,'')) || 0;
+            const ship = parseFloat(p.shipping_fee.replace(/[^0-9.]/g,'')) || 0;
+            totalP += price; totalS += ship;
+            message += `- ${p.name}\n Prix : ${p.price} CDF\n Livraison : ${p.shipping_fee} CDF\n\n`;
         });
-        const grandTotal = totalProducts + totalShipping;
-        message += `Total produits : ${totalProducts} CDF\n`;
-        message += `Total livraison : ${totalShipping} CDF\n`;
-        message += `**Grand Total : ${grandTotal} CDF**\n\n`;
-        message += `Merci de me confirmer la disponibilité !`;
-        const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/${whatsapp}?text=${encodedMessage}`, '_blank');
+        message += `Total produits : ${totalP} CDF\nTotal livraison : ${totalS} CDF\n**Grand Total : ${totalP+totalS} CDF**`;
+        window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
     }
-    function loadProducts() {
+
+    function loadProducts(city = null) {
         const loader = document.getElementById('loader');
         const btn = document.getElementById('refreshBtn');
-        btn.innerHTML = 'Chargement... <i class="fas fa-spinner fa-spin ms-2"></i>';
         btn.disabled = true;
         loader.classList.remove('d-none');
-        // Correction : ajouter un timestamp pour éviter le cache sur la requête /products
-        fetch('/products?t=' + new Date().getTime())
+
+        let url = `/products?t=${new Date().getTime()}`;
+        if (city) url += `&city=${encodeURIComponent(city)}`;
+
+        fetch(url)
             .then(r => r.json())
             .then(data => {
                 allProducts = data;
                 renderProducts(data);
                 updateCartBar();
             })
-            .catch(err => {
-                console.error("Erreur :", err);
-                alert("Erreur lors du chargement des produits. Veuillez réessayer.");
-            })
+            .catch(() => alert("Erreur de chargement"))
             .finally(() => {
-                btn.innerHTML = 'Actualiser les produits <i class="fas fa-sync-alt ms-2"></i>';
                 btn.disabled = false;
                 loader.classList.add('d-none');
             });
     }
+
     document.getElementById('searchInput').addEventListener('keyup', (e) => {
         const term = e.target.value.toLowerCase();
         const filtered = allProducts.filter(p =>
@@ -350,8 +195,16 @@
         );
         renderProducts(filtered);
     });
-    document.getElementById('refreshBtn').addEventListener('click', loadProducts);
-    window.onload = loadProducts;
+
+    document.getElementById('refreshBtn').addEventListener('click', () => loadProducts(selectedCity));
+
+    window.onload = () => {
+        if (selectedCity) {
+            document.getElementById('citySelector').classList.add('d-none');
+            document.getElementById('productsTitle').textContent = `Produits à ${selectedCity}`;
+            loadProducts(selectedCity);
+        }
+    };
 </script>
 </body>
 </html>
