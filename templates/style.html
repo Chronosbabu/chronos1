@@ -15,9 +15,9 @@
         .city-selector { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 30px auto; max-width: 700px; }
         .city-btn { font-size: 1.4rem; padding: 18px 40px; border-radius: 50px; margin: 12px; }
         .products-section { display: none; }
-        .card { border: none; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s; }
+        .card { border: none; border-radius: 15px; overflow: visible; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s; }
         .card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
-        .card-img-top { height: 220px; object-fit: cover; }
+        .card-img-top { width: 100%; height: auto; max-height: 300px; object-fit: contain; }
         .price { color: #198754; font-weight: bold; }
         .btn-whatsapp { background: #25D366; }
         .btn-whatsapp:hover { background: #128C7E; }
@@ -45,7 +45,7 @@
         <div class="d-flex justify-content-center flex-wrap gap-3">
             <button onclick="selectCity('BUKAVU')" class="btn btn-success city-btn">BUKAVU</button>
             <button onclick="selectCity('LUBUMBASHI')" class="btn btn-success city-btn">LUBUMBASHI</button>
-            <button onclick="selectCity('KINDI')" class="btn btn-success city-btn">KINDI</button>
+            <button onclick="selectCity('KINDU')" class="btn btn-success city-btn">KINDU</button>
         </div>
         <p class="text-muted mt-4">Seuls les produits de la ville choisie seront affichés</p>
     </div>

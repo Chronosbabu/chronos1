@@ -1,21 +1,17 @@
+# app.py (fichier serveur central)
 from flask import Flask, request, jsonify, send_from_directory, render_template
 from werkzeug.utils import secure_filename
 import os
 import json
-
 app = Flask(__name__)
-
 # ==================== CONFIGURATION ====================
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 PRODUCTS_FILE = 'products.json'
 ALLOWED_CITIES = ['BUKAVU', 'LUBUMBASHI', 'KINDI']
-
 products = []
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
 # ==================== CHARGER / SAUVEGARDER ====================
 def load_products():
     global products
@@ -28,11 +24,9 @@ def load_products():
             products = []
     else:
         products = []
-
 def save_products():
     with open(PRODUCTS_FILE, 'w', encoding='utf-8') as f:
         json.dump(products, f, ensure_ascii=False, indent=2)
-
 # ==================== ROUTES ====================
 @app.route('/publish', methods=['POST'])
 def publish_product():
@@ -43,25 +37,18 @@ def publish_product():
     whatsapp_raw = request.form.get('whatsapp', '').strip()
     city = request.form.get('city', '').strip().upper()
     image = request.files.get('image')
-
     whatsapp = ''.join(c for c in whatsapp_raw if c.isdigit())
-
     if not all([name, price, shipping_fee, description, whatsapp, image, city]):
         return jsonify({'error': 'Tous les champs sont obligatoires'}), 400
-
     if city not in ALLOWED_CITIES:
         return jsonify({'error': f'Ville invalide. Choisissez parmi : {", ".join(ALLOWED_CITIES)}'}), 400
-
     if len(whatsapp) < 8 or len(whatsapp) > 15 or not whatsapp.startswith('243'):
         return jsonify({'error': 'Le numéro WhatsApp doit commencer par 243'}), 400
-
     if not allowed_file(image.filename):
         return jsonify({'error': 'Format d\'image non supporté (png, jpg, jpeg, gif)'}), 400
-
     filename = secure_filename(image.filename)
     path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     image.save(path)
-
     product = {
         'id': len(products) + 1,
         'name': name,
@@ -72,11 +59,9 @@ def publish_product():
         'city': city,
         'image_url': f'/static/uploads/{filename}'
     }
-
     products.append(product)
     save_products()
     return jsonify({'message': 'Produit publié avec succès', 'product': product})
-
 @app.route('/products')
 def get_products():
     city_filter = request.args.get('city', '').strip().upper()
@@ -84,11 +69,9 @@ def get_products():
         filtered = [p for p in products if p.get('city') == city_filter]
     else:
         filtered = products
-
     # NOUVEAUTÉ : les produits les plus récents en premier (tri par ID descendant)
     filtered_sorted = sorted(filtered, key=lambda p: p['id'], reverse=True)
     return jsonify(filtered_sorted)
-
 @app.route('/my_products')
 def my_products():
     whatsapp = request.args.get('whatsapp', '').strip()
@@ -96,7 +79,6 @@ def my_products():
         return jsonify([])
     my_prods = [p for p in products if p['whatsapp'] == whatsapp]
     return jsonify(sorted(my_prods, key=lambda p: p['id'], reverse=True))
-
 @app.route('/delete_product', methods=['POST'])
 def delete_product():
     try:
@@ -104,10 +86,8 @@ def delete_product():
             data = request.get_json()
         else:
             data = request.form
-
         prod_id = int(data.get('id'))
         whatsapp = data.get('whatsapp', '').strip()
-
         global products
         for i, p in enumerate(products):
             if p['id'] == prod_id and p['whatsapp'] == whatsapp:
@@ -122,25 +102,20 @@ def delete_product():
         return jsonify({'error': 'Produit non trouvé ou vous n\'êtes pas autorisé'}), 403
     except:
         return jsonify({'error': 'Erreur lors de la suppression'}), 400
-
 @app.route('/static/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
 # ==================== ROUTES CHRONOS ====================
 @app.route("/")
 def home():
     apps = [{"name": "Mon App", "apk": "mon_app_v2.apk", "icon": "mon_app.png"}]
     return render_template("index.html", apps=apps)
-
 @app.route("/download/<apk>")
 def download(apk):
     return send_from_directory("static/apks", apk, as_attachment=True)
-
 @app.route("/xcommand")
 def xcommand():
     return render_template("style.html")
-
 # ==================== LANCEMENT ====================
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
