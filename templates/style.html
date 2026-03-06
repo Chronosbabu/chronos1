@@ -110,6 +110,7 @@
         }
         filteredProducts.forEach(p => {
             const isSelected = selectedIds.has(p.id);
+            const firstWhatsapp = p.whatsapps && p.whatsapps.length > 0 ? p.whatsapps[0] : '';
             const col = document.createElement('div');
             col.className = 'col-lg-3 col-md-4 col-sm-6 mb-4';
             col.innerHTML = `
@@ -120,7 +121,7 @@
                         <p class="card-text flex-grow-1">${p.description}</p>
                         <strong class="price mb-2">${p.price} CDF</strong>
                         <p class="shipping">Livraison : ${p.shipping_fee} CDF</p>
-                        <a href="https://wa.me/${p.whatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}" target="_blank" class="btn btn-whatsapp w-100 mb-3">
+                        <a href="https://wa.me/${firstWhatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}" target="_blank" class="btn btn-whatsapp w-100 mb-3">
                             Contacter <i class="fab fa-whatsapp ms-2"></i>
                         </a>
                         <div class="form-check">
@@ -152,22 +153,30 @@
     function sendToWhatsApp() {
         const selected = allProducts.filter(p => selectedIds.has(p.id));
         if (selected.length === 0) return;
-        const uniqueWhatsapps = new Set(selected.map(p => p.whatsapp));
-        if (uniqueWhatsapps.size > 1) {
-            alert("Les produits proviennent de vendeurs différents. Sélectionnez un seul vendeur.");
-            return;
-        }
-        const whatsapp = selected[0].whatsapp;
-        let message = "Bonjour,\nJe suis intéressé par :\n\n";
-        let totalP = 0, totalS = 0;
+
+        let sellerProducts = {};
         selected.forEach(p => {
-            const price = parseFloat(p.price.replace(/[^0-9.]/g,'')) || 0;
-            const ship = parseFloat(p.shipping_fee.replace(/[^0-9.]/g,'')) || 0;
-            totalP += price; totalS += ship;
-            message += `- ${p.name}\n Prix : ${p.price} CDF\n Livraison : ${p.shipping_fee} CDF\n\n`;
+            (p.whatsapps || []).forEach(wa => {
+                if (!sellerProducts[wa]) {
+                    sellerProducts[wa] = [];
+                }
+                sellerProducts[wa].push(p);
+            });
         });
-        message += `Total produits : ${totalP} CDF\nTotal livraison : ${totalS} CDF\n**Grand Total : ${totalP+totalS} CDF**`;
-        window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+
+        for (let whatsapp in sellerProducts) {
+            let prods = sellerProducts[whatsapp];
+            let message = "Bonjour,\nJe suis intéressé par :\n\n";
+            let totalP = 0, totalS = 0;
+            prods.forEach(p => {
+                const price = parseFloat(p.price.replace(/[^0-9.]/g,'')) || 0;
+                const ship = parseFloat(p.shipping_fee.replace(/[^0-9.]/g,'')) || 0;
+                totalP += price; totalS += ship;
+                message += `- ${p.name}\n Prix : ${p.price} CDF\n Livraison : ${p.shipping_fee} CDF\n\n`;
+            });
+            message += `Total produits : ${totalP} CDF\nTotal livraison : ${totalS} CDF\n**Grand Total : ${totalP+totalS} CDF**`;
+            window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+        }
     }
 
     function loadProducts(city) {
