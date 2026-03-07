@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; }
+        body { background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; padding-bottom: 70px; }
         .navbar { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .navbar-brand { font-weight: bold; color: #198754; }
         .hero { background: #198754; color: white; padding: 50px 0; text-align: center; }
@@ -21,7 +22,7 @@
         .price { color: #198754; font-weight: bold; }
         .btn-whatsapp { background: #25D366; }
         .btn-whatsapp:hover { background: #128C7E; }
-        .cart-bar { background: #d4edda; border: 1px solid #c3e6cb; }
+        .cart-bar { background: #d4edda; border: 1px solid #c3e6cb; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; padding: 15px; display: flex !important; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
@@ -67,7 +68,7 @@
             <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Rechercher dans votre ville...">
         </div>
 
-        <div id="cartBar" class="cart-bar d-none p-3 mb-4">
+        <div id="cartBar" class="cart-bar d-none container">
             <span id="cartCount" class="fw-bold">0 produit sélectionné</span>
             <button onclick="sendToWhatsApp()" class="btn btn-cart">Envoyer la commande <i class="fab fa-whatsapp ms-2"></i></button>
         </div>
@@ -101,6 +102,27 @@
         document.getElementById('citySelector').style.display = 'block';
     }
 
+    function buildMessage(products, whatsapp) {
+        let message = "Bonjour,\nJe suis intéressé par :\n\n";
+        let totalP = 0, totalS = 0;
+        products.forEach(p => {
+            const price = parseFloat(p.price.replace(/[^0-9.]/g,'')) || 0;
+            const ship = parseFloat(p.shipping_fee.replace(/[^0-9.]/g,'')) || 0;
+            totalP += price; totalS += ship;
+            message += `- ${p.name}\n Prix : ${p.price} CDF\n Livraison : ${p.shipping_fee} CDF\n\n`;
+        });
+        message += `Total produits : ${totalP} CDF\nTotal livraison : ${totalS} CDF\n**Grand Total : ${totalP+totalS} CDF**`;
+        return `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
+    }
+
+    function sendSingleToWhatsApp(id) {
+        const p = allProducts.find(p => p.id === id);
+        if (p) {
+            const url = buildMessage([p], p.whatsapp);
+            window.open(url, '_blank');
+        }
+    }
+
     function renderProducts(filteredProducts) {
         const container = document.getElementById('products');
         container.innerHTML = '';
@@ -120,7 +142,7 @@
                         <p class="card-text flex-grow-1">${p.description}</p>
                         <strong class="price mb-2">${p.price} CDF</strong>
                         <p class="shipping">Livraison : ${p.shipping_fee} CDF</p>
-                        <a href="https://wa.me/${p.whatsapp}?text=Je%20suis%20intéressé%20par%20${encodeURIComponent(p.name)}" target="_blank" class="btn btn-whatsapp w-100 mb-3">
+                        <a href="#" onclick="sendSingleToWhatsApp(${p.id})" class="btn btn-whatsapp w-100 mb-3">
                             Contacter <i class="fab fa-whatsapp ms-2"></i>
                         </a>
                         <div class="form-check">
@@ -158,16 +180,8 @@
             return;
         }
         const whatsapp = selected[0].whatsapp;
-        let message = "Bonjour,\nJe suis intéressé par :\n\n";
-        let totalP = 0, totalS = 0;
-        selected.forEach(p => {
-            const price = parseFloat(p.price.replace(/[^0-9.]/g,'')) || 0;
-            const ship = parseFloat(p.shipping_fee.replace(/[^0-9.]/g,'')) || 0;
-            totalP += price; totalS += ship;
-            message += `- ${p.name}\n Prix : ${p.price} CDF\n Livraison : ${p.shipping_fee} CDF\n\n`;
-        });
-        message += `Total produits : ${totalP} CDF\nTotal livraison : ${totalS} CDF\n**Grand Total : ${totalP+totalS} CDF**`;
-        window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+        const url = buildMessage(selected, whatsapp);
+        window.open(url, '_blank');
     }
 
     function loadProducts(city) {
@@ -213,3 +227,4 @@
 </script>
 </body>
 </html>
+```
