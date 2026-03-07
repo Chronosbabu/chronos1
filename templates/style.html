@@ -150,6 +150,16 @@
         } else bar.classList.add('d-none');
     }
 
+    function openWaLink(url) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     function sendToWhatsApp() {
         const selected = allProducts.filter(p => selectedIds.has(p.id));
         if (selected.length === 0) return;
@@ -175,7 +185,8 @@
                 message += `- ${p.name}\n Prix : ${p.price} CDF\n Livraison : ${p.shipping_fee} CDF\n\n`;
             });
             message += `Total produits : ${totalP} CDF\nTotal livraison : ${totalS} CDF\n**Grand Total : ${totalP+totalS} CDF**`;
-            window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+            const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
+            openWaLink(url);
         }
     }
 
