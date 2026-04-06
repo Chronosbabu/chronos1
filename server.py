@@ -10,8 +10,8 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 PRODUCTS_FILE = 'products.json'
-ALLOWED_CITIES = ['BUKAVU', 'LUBUMBASHI', 'KINDU', 'UNKNOWN']
-
+# === MODIFIÉ : les villes sont remplacées par les deux types en anglais ===
+ALLOWED_CITIES = ['FAST FOOD', 'TO PREPARE']
 products = []
 
 # ==================== FONCTIONS ====================
@@ -43,20 +43,16 @@ def publish_product():
     shipping_fee = request.form.get('shipping_fee', '').strip()
     description = request.form.get('description', '').strip()
     whatsapp_raw = request.form.get('whatsapp', '').strip()
-    city = request.form.get('city', '').strip().upper()
-    category = request.form.get('category', '').strip()
+    city = request.form.get('city', '').strip().upper()          # "city" = type (FAST FOOD / TO PREPARE)
     image = request.files.get('image')
 
     whatsapp = ''.join(c for c in whatsapp_raw if c.isdigit())
 
-    if not all([name, price, shipping_fee, description, whatsapp, image, category]):
+    if not all([name, price, shipping_fee, description, whatsapp, image, city]):
         return jsonify({'error': 'Tous les champs sont obligatoires'}), 400
 
-    if city and city not in ALLOWED_CITIES:
-        return jsonify({'error': 'Ville invalide'}), 400
-
-    if category not in ['Fast Food', 'Ready Meals']:
-        return jsonify({'error': 'Catégorie invalide (Fast Food ou Ready Meals)'}), 400
+    if city not in ALLOWED_CITIES:
+        return jsonify({'error': 'Type invalide'}), 400
 
     if len(whatsapp) < 8 or len(whatsapp) > 15 or not whatsapp.startswith('243'):
         return jsonify({'error': 'Le numéro WhatsApp doit commencer par 243'}), 400
@@ -64,7 +60,7 @@ def publish_product():
     if not allowed_file(image.filename):
         return jsonify({'error': 'Format image non supporté'}), 400
 
-    ext = image.filename.rsplit('.', 1)[1].lower()
+    ext = image.filename.rsplit('.', 1)[1]
     filename = str(uuid.uuid4()) + "." + ext
     path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     image.save(path)
@@ -76,8 +72,7 @@ def publish_product():
         'shipping_fee': shipping_fee,
         'description': description,
         'whatsapp': whatsapp,
-        'city': city or 'UNKNOWN',
-        'category': category,
+        'city': city,                     # stocké comme type
         'image_url': f'/static/uploads/{filename}'
     }
 
@@ -88,7 +83,12 @@ def publish_product():
 # ==================== ROUTE TOUS PRODUITS ====================
 @app.route('/products')
 def get_products():
-    filtered_sorted = sorted(products, key=lambda p: p['id'], reverse=True)
+    city_filter = request.args.get('city', '').strip().upper()
+    if city_filter and city_filter in ALLOWED_CITIES:
+        filtered = [p for p in products if p.get('city') == city_filter]
+    else:
+        filtered = products
+    filtered_sorted = sorted(filtered, key=lambda p: p['id'], reverse=True)
     return jsonify(filtered_sorted)
 
 # ==================== MES PRODUITS ====================
@@ -130,20 +130,24 @@ def delete_product():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-# ==================== PAGES ====================
+# ==================== PAGE APK ====================
 @app.route("/")
 def home():
-    apps = [{"name": "Mon App", "apk": "mon_app_v2.apk", "icon": "mon_app.png"}]
+    apps = [
+        {"name": "Mon App", "apk": "mon_app_v2.apk", "icon": "mon_app.png"}
+    ]
     return render_template("index.html", apps=apps)
 
 @app.route("/download/<apk>")
 def download(apk):
     return send_from_directory("static/apks", apk, as_attachment=True)
 
+# ==================== PAGE PRINCIPALE (produits) ====================
 @app.route("/xcommand")
 def xcommand():
     return render_template("style.html")
 
+# ==================== NOUVELLE PAGE POST (équivalent Flutter) ====================
 @app.route("/post")
 def post():
     return render_template("post.html")

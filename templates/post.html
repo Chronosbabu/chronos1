@@ -9,88 +9,103 @@
     <style>
         body { background: linear-gradient(135deg, #f8f9fa, #e9ecef); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .navbar { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .card { border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .navbar-brand { font-weight: bold; color: #198754; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .preview { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; border: 2px dashed #198754; }
+        .tab-content { min-height: 500px; }
+        .form-label { font-weight: 600; }
     </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
-        <a class="navbar-brand" href="style.html">← Retour à l'accueil</a>
-        <h4 class="mx-auto mb-0">Vendeur X-command</h4>
+        <a class="navbar-brand" href="/xcommand">X-command</a>
+        <a href="/xcommand" class="btn btn-outline-success">
+            <i class="fas fa-arrow-left"></i> Retour aux produits
+        </a>
     </div>
 </nav>
 
-<div class="container mt-5">
-    <ul class="nav nav-tabs mb-4" id="myTab">
-        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#publishTab">Publier un produit</a></li>
-        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#myProductsTab">Mes produits</a></li>
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Publier un produit</h2>
+
+    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="publish-tab" data-bs-toggle="tab" data-bs-target="#publish" type="button">
+                <i class="fas fa-plus"></i> Publier
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="myproducts-tab" data-bs-toggle="tab" data-bs-target="#myproducts" type="button">
+                <i class="fas fa-list"></i> Mes produits
+            </button>
+        </li>
     </ul>
 
     <div class="tab-content">
-        <!-- ===== TAB PUBLIER ===== -->
-        <div class="tab-pane fade show active" id="publishTab">
+        <!-- ==================== TAB PUBLIER ==================== -->
+        <div class="tab-pane fade show active" id="publish">
             <div class="card p-4">
-                <h3 class="mb-4">Publier un nouveau produit</h3>
                 <form id="publishForm">
-                    <div class="mb-3 text-center border rounded p-3" id="imagePreview" style="height:220px; background:#f8f9fa; cursor:pointer;">
-                        Cliquez pour choisir une image
+                    <div class="mb-4 text-center">
+                        <label for="image" class="form-label d-block">Image du produit</label>
+                        <input type="file" id="image" accept="image/*" class="form-control d-none" required>
+                        <div id="previewContainer" onclick="document.getElementById('image').click()" style="cursor:pointer;">
+                            <img id="preview" src="https://via.placeholder.com/600x300?text=Cliquez+pour+choisir+une+image" class="preview" alt="Prévisualisation">
+                        </div>
                     </div>
-                    <input type="file" id="imageInput" accept="image/*" class="form-control d-none">
 
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <label class="form-label">Nom du produit</label>
                             <input type="text" id="name" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Catégorie</label>
-                            <select id="category" class="form-select" required>
-                                <option value="Fast Food">🍔 Fast Food</option>
-                                <option value="Ready Meals">🍽️ Ready Meals</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Prix (CDF)</label>
-                            <input type="text" id="price" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Frais de livraison (CDF)</label>
-                            <input type="text" id="shipping_fee" class="form-control" required>
                         </div>
                         <div class="col-12">
                             <label class="form-label">Description</label>
                             <textarea id="description" class="form-control" rows="4" required></textarea>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">WhatsApp (243...)</label>
-                            <input type="tel" id="whatsapp" class="form-control" required>
+                            <label class="form-label">Prix (CDF)</label>
+                            <input type="number" id="price" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Ville</label>
-                            <select id="city" class="form-select" required>
-                                <option value="BUKAVU">BUKAVU</option>
-                                <option value="LUBUMBASHI">LUBUMBASHI</option>
-                                <option value="KINDU">KINDU</option>
+                            <label class="form-label">Frais de livraison (CDF)</label>
+                            <input type="number" id="shipping_fee" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">WhatsApp (243...)</label>
+                            <input type="tel" id="whatsapp" class="form-control" placeholder="243XXXXXXXXX" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Type de produit</label>
+                            <select id="type" class="form-select" required>
+                                <option value="">Choisir...</option>
+                                <option value="FAST FOOD">FAST FOOD</option>
+                                <option value="TO PREPARE">TO PREPARE</option>
                             </select>
                         </div>
                     </div>
 
-                    <button type="submit" id="publishBtn" class="btn btn-success btn-lg w-100 mt-4">
-                        <i class="fas fa-paper-plane"></i> PUBLIER IMMÉDIATEMENT
-                    </button>
+                    <div class="d-grid mt-4">
+                        <button type="submit" id="submitBtn" class="btn btn-success btn-lg">
+                            <span id="btnText">PUBLIER LE PRODUIT</span>
+                            <span id="btnLoader" class="d-none spinner-border spinner-border-sm"></span>
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
 
-        <!-- ===== TAB MES PRODUITS ===== -->
-        <div class="tab-pane fade" id="myProductsTab">
+        <!-- ==================== TAB MES PRODUITS ==================== -->
+        <div class="tab-pane fade" id="myproducts">
             <div class="card p-4">
-                <h3 class="mb-4">Mes produits publiés</h3>
                 <div class="input-group mb-3">
-                    <input type="tel" id="myWhatsapp" class="form-control" placeholder="Votre WhatsApp (243...)">
-                    <button onclick="loadMyProducts()" class="btn btn-primary">Charger</button>
+                    <input type="tel" id="myWhatsapp" class="form-control" placeholder="Votre WhatsApp (243...)" aria-label="WhatsApp">
+                    <button onclick="loadMyProducts()" class="btn btn-primary">Charger mes produits</button>
                 </div>
-                <div id="myProductsList"></div>
+
+                <div id="myProductsList" class="row"></div>
+                <div id="myLoader" class="text-center my-4 d-none">Chargement...</div>
             </div>
         </div>
     </div>
@@ -98,24 +113,29 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Preview image
-    document.getElementById('imagePreview').addEventListener('click', () => document.getElementById('imageInput').click());
-    document.getElementById('imageInput').addEventListener('change', function(e) {
-        if (e.target.files && e.target.files[0]) {
+    // ====================== PRÉVISUALISATION IMAGE ======================
+    document.getElementById('image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
             const reader = new FileReader();
             reader.onload = function(ev) {
-                document.getElementById('imagePreview').innerHTML = `<img src="${ev.target.result}" style="max-height:100%; max-width:100%; object-fit:contain;">`;
+                document.getElementById('preview').src = ev.target.result;
             };
-            reader.readAsDataURL(e.target.files[0]);
+            reader.readAsDataURL(file);
         }
     });
 
-    // Publier
+    // ====================== PUBLIER ======================
     document.getElementById('publishForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const btn = document.getElementById('publishBtn');
+
+        const btn = document.getElementById('submitBtn');
+        const text = document.getElementById('btnText');
+        const loader = document.getElementById('btnLoader');
+
+        text.classList.add('d-none');
+        loader.classList.remove('d-none');
         btn.disabled = true;
-        btn.innerHTML = 'Publication en cours...';
 
         const formData = new FormData();
         formData.append('name', document.getElementById('name').value.trim());
@@ -123,78 +143,107 @@
         formData.append('shipping_fee', document.getElementById('shipping_fee').value.trim());
         formData.append('description', document.getElementById('description').value.trim());
         formData.append('whatsapp', document.getElementById('whatsapp').value.trim());
-        formData.append('city', document.getElementById('city').value);
-        formData.append('category', document.getElementById('category').value);
-        formData.append('image', document.getElementById('imageInput').files[0]);
+        formData.append('city', document.getElementById('type').value);   // envoie comme "city" pour le backend
+        formData.append('image', document.getElementById('image').files[0]);
 
         try {
-            const res = await fetch('/publish', { method: 'POST', body: formData });
+            const res = await fetch('/publish', {
+                method: 'POST',
+                body: formData
+            });
+
             const data = await res.json();
+
             if (res.ok) {
                 alert('✅ Produit publié avec succès !');
                 document.getElementById('publishForm').reset();
-                document.getElementById('imagePreview').innerHTML = 'Cliquez pour choisir une image';
-                // Switch to my products tab
-                const myTab = new bootstrap.Tab(document.querySelector('#myProductsTab'));
-                myTab.show();
+                document.getElementById('preview').src = 'https://via.placeholder.com/600x300?text=Cliquez+pour+choisir+une+image';
             } else {
-                alert('❌ ' + (data.error || 'Erreur inconnue'));
+                alert('❌ ' + (data.error || 'Erreur serveur'));
             }
         } catch (err) {
-            alert('Erreur de connexion');
+            alert('Erreur de connexion : ' + err);
+        } finally {
+            text.classList.remove('d-none');
+            loader.classList.add('d-none');
+            btn.disabled = false;
         }
-        btn.disabled = false;
-        btn.innerHTML = `<i class="fas fa-paper-plane"></i> PUBLIER IMMÉDIATEMENT`;
     });
 
-    // Mes produits
+    // ====================== MES PRODUITS ======================
     async function loadMyProducts() {
-        const whatsapp = document.getElementById('myWhatsapp').value.replace(/\D/g, '');
-        if (!whatsapp.startsWith('243')) {
-            alert('Numéro WhatsApp invalide (doit commencer par 243)');
+        const whatsappRaw = document.getElementById('myWhatsapp').value.trim();
+        const whatsapp = whatsappRaw.replace(/\D/g, '');
+        const container = document.getElementById('myProductsList');
+        const loader = document.getElementById('myLoader');
+
+        if (!whatsapp || !whatsapp.startsWith('243')) {
+            alert('Veuillez entrer un numéro WhatsApp valide commençant par 243');
             return;
         }
-        const res = await fetch(`/my_products?whatsapp=${whatsapp}`);
-        const products = await res.json();
-        const container = document.getElementById('myProductsList');
+
+        loader.classList.remove('d-none');
         container.innerHTML = '';
 
-        if (products.length === 0) {
-            container.innerHTML = `<p class="text-muted">Aucun produit trouvé pour ce numéro.</p>`;
-            return;
-        }
+        try {
+            const res = await fetch(`/my_products?whatsapp=${whatsapp}`);
+            const products = await res.json();
 
-        products.forEach(p => {
-            const div = document.createElement('div');
-            div.className = 'card mb-3 p-3';
-            div.innerHTML = `
-                <div class="row">
-                    <div class="col-3"><img src="${p.image_url}" class="img-fluid rounded"></div>
-                    <div class="col-9">
-                        <h5>${p.name}</h5>
-                        <p>${p.description}</p>
-                        <strong>${p.price} CDF • Livraison ${p.shipping_fee} CDF</strong><br>
-                        <small>Catégorie : ${p.category}</small>
-                        <button onclick="deleteProduct(${p.id}, '${whatsapp}')" class="btn btn-sm btn-danger mt-2">Supprimer</button>
+            if (products.length === 0) {
+                container.innerHTML = `<p class="text-center text-muted">Aucun produit trouvé pour ce numéro.</p>`;
+                return;
+            }
+
+            products.forEach(p => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-3';
+                col.innerHTML = `
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-4">
+                                <img src="${p.image_url}" class="img-fluid rounded-start" style="height:140px;object-fit:cover;" alt="${p.name}">
+                            </div>
+                            <div class="col-8">
+                                <div class="card-body">
+                                    <h5>${p.name}</h5>
+                                    <p class="mb-1"><strong>${p.price} CDF</strong> • ${p.city}</p>
+                                    <p class="text-muted small">${p.description.substring(0, 80)}...</p>
+                                    <button onclick="deleteProduct(${p.id}, '${whatsapp}')" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i> Supprimer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            `;
-            container.appendChild(div);
-        });
+                `;
+                container.appendChild(col);
+            });
+        } catch (e) {
+            container.innerHTML = `<p class="text-danger">Erreur de chargement</p>`;
+        } finally {
+            loader.classList.add('d-none');
+        }
     }
 
     async function deleteProduct(id, whatsapp) {
         if (!confirm('Supprimer ce produit définitivement ?')) return;
-        const res = await fetch('/delete_product', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({id: id, whatsapp: whatsapp})
-        });
-        if (res.ok) {
-            alert('Produit supprimé');
-            loadMyProducts();
-        } else {
-            alert('Impossible de supprimer');
+
+        try {
+            const res = await fetch('/delete_product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `id=${id}&whatsapp=${whatsapp}`
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                alert('✅ Produit supprimé');
+                loadMyProducts();   // recharger automatiquement
+            } else {
+                alert(data.error || 'Impossible de supprimer');
+            }
+        } catch (e) {
+            alert('Erreur réseau');
         }
     }
 </script>
