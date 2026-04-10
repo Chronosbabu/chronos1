@@ -10,7 +10,8 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 PRODUCTS_FILE = 'products.json'
-# === MODIFIÉ : les villes sont remplacées par les deux types en anglais ===
+
+# Types autorisés (remplacement des villes)
 ALLOWED_CITIES = ['FAST FOOD', 'TO PREPARE']
 products = []
 
@@ -43,7 +44,7 @@ def publish_product():
     shipping_fee = request.form.get('shipping_fee', '').strip()
     description = request.form.get('description', '').strip()
     whatsapp_raw = request.form.get('whatsapp', '').strip()
-    city = request.form.get('city', '').strip().upper()          # "city" = type (FAST FOOD / TO PREPARE)
+    city = request.form.get('city', '').strip().upper()
     image = request.files.get('image')
 
     whatsapp = ''.join(c for c in whatsapp_raw if c.isdigit())
@@ -60,7 +61,7 @@ def publish_product():
     if not allowed_file(image.filename):
         return jsonify({'error': 'Format image non supporté'}), 400
 
-    ext = image.filename.rsplit('.', 1)[1]
+    ext = image.filename.rsplit('.', 1)[1].lower()
     filename = str(uuid.uuid4()) + "." + ext
     path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     image.save(path)
@@ -72,7 +73,7 @@ def publish_product():
         'shipping_fee': shipping_fee,
         'description': description,
         'whatsapp': whatsapp,
-        'city': city,                     # stocké comme type
+        'city': city,
         'image_url': f'/static/uploads/{filename}'
     }
 
@@ -110,6 +111,7 @@ def delete_product():
             data = request.form
         prod_id = int(data.get('id'))
         whatsapp = data.get('whatsapp', '').strip()
+
         global products
         for i, p in enumerate(products):
             if p['id'] == prod_id and p['whatsapp'] == whatsapp:
@@ -130,24 +132,13 @@ def delete_product():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-# ==================== PAGE APK ====================
+# ==================== PAGE PRINCIPALE (remplace index.html) ====================
 @app.route("/")
-def home():
-    apps = [
-        {"name": "Mon App", "apk": "mon_app_v2.apk", "icon": "mon_app.png"}
-    ]
-    return render_template("index.html", apps=apps)
-
-@app.route("/download/<apk>")
-def download(apk):
-    return send_from_directory("static/apks", apk, as_attachment=True)
-
-# ==================== PAGE PRINCIPALE (produits) ====================
 @app.route("/xcommand")
 def xcommand():
     return render_template("style.html")
 
-# ==================== NOUVELLE PAGE POST (équivalent Flutter) ====================
+# ==================== PAGE POST ====================
 @app.route("/post")
 def post():
     return render_template("post.html")
@@ -155,7 +146,6 @@ def post():
 # ==================== LANCEMENT ====================
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    os.makedirs('static/apks', exist_ok=True)
     load_products()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
