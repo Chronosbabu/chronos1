@@ -18,6 +18,11 @@ body { background:#f8f9fa; }
 <div class="hero">
 <h1>Bienvenue sur X-command</h1>
 <p>Choisissez un type</p>
+
+<!-- 🔥 BOUTON VERS POST -->
+<a href="/post" class="btn btn-light mt-3">
+➕ Publier un produit
+</a>
 </div>
 
 <div class="container mt-4 text-center">
@@ -45,11 +50,16 @@ function render(data){
 const container=document.getElementById('products');
 container.innerHTML='';
 
+if(data.length === 0){
+container.innerHTML = "<p class='text-center'>Aucun produit</p>";
+return;
+}
+
 data.forEach(p=>{
 container.innerHTML+=`
 <div class="col-md-3">
 <div class="card mb-3">
-<img src="${p.image_url}" class="card-img-top">
+<img src="${p.image_url}" class="card-img-top" style="height:200px;object-fit:cover;">
 <div class="card-body">
 <h5>${p.name}</h5>
 <p>${p.price} CDF</p>

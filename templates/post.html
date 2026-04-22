@@ -10,25 +10,29 @@
 
 <body class="container mt-5">
 
+<!-- 🔥 RETOUR -->
+<a href="/" class="btn btn-secondary mb-3">⬅ Retour</a>
+
 <h2>Publier un produit</h2>
 
 <form id="form">
 
-<input class="form-control mb-2" id="name" placeholder="Nom">
-<input class="form-control mb-2" id="price" placeholder="Prix">
-<input class="form-control mb-2" id="shipping_fee" placeholder="Livraison">
-<input class="form-control mb-2" id="whatsapp" placeholder="243...">
+<input class="form-control mb-2" id="name" placeholder="Nom" required>
+<input class="form-control mb-2" id="price" placeholder="Prix" required>
+<input class="form-control mb-2" id="shipping_fee" placeholder="Livraison" required>
+<input class="form-control mb-2" id="whatsapp" placeholder="243..." required>
 
-<select id="type" class="form-control mb-2">
-<option>FAST FOOD</option>
-<option>TO PREPARE</option>
+<select id="type" class="form-control mb-2" required>
+<option value="">Choisir un type</option>
+<option value="FAST FOOD">FAST FOOD</option>
+<option value="TO PREPARE">TO PREPARE</option>
 </select>
 
-<input type="file" id="image" class="form-control mb-2">
+<input type="file" id="image" class="form-control mb-2" required>
 
-<textarea id="description" class="form-control mb-2"></textarea>
+<textarea id="description" class="form-control mb-2" placeholder="Description" required></textarea>
 
-<button class="btn btn-success">Publier</button>
+<button class="btn btn-success w-100">Publier</button>
 
 </form>
 
@@ -38,16 +42,28 @@ e.preventDefault();
 
 let fd=new FormData();
 
-fd.append('name',name.value);
-fd.append('price',price.value);
-fd.append('shipping_fee',shipping_fee.value);
-fd.append('description',description.value);
-fd.append('whatsapp',whatsapp.value);
-fd.append('city',type.value);
-fd.append('image',image.files[0]);
+fd.append('name', document.getElementById('name').value);
+fd.append('price', document.getElementById('price').value);
+fd.append('shipping_fee', document.getElementById('shipping_fee').value);
+fd.append('description', document.getElementById('description').value);
+fd.append('whatsapp', document.getElementById('whatsapp').value);
+fd.append('city', document.getElementById('type').value);
+fd.append('image', document.getElementById('image').files[0]);
 
+try{
 let res=await fetch('/publish',{method:'POST',body:fd});
-alert(await res.text());
+let data=await res.json();
+
+if(res.ok){
+alert("✅ Produit publié !");
+window.location.href = "/";
+}else{
+alert("❌ " + data.error);
+}
+
+}catch(e){
+alert("Erreur connexion serveur");
+}
 });
 </script>
 
