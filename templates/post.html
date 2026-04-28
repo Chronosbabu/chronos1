@@ -12,24 +12,23 @@
 
 <h2>Publier un produit</h2>
 
-<!-- RETOUR -->
 <a href="/" class="btn btn-secondary mb-3">← Retour</a>
 
 <form id="form">
 
-<input class="form-control mb-2" id="name" placeholder="Nom">
-<input class="form-control mb-2" id="price" placeholder="Prix">
-<input class="form-control mb-2" id="shipping_fee" placeholder="Livraison">
-<input class="form-control mb-2" id="whatsapp" placeholder="243...">
+<input class="form-control mb-2" id="name" placeholder="Nom" required>
+<input class="form-control mb-2" id="price" type="number" placeholder="Prix" required>
+<input class="form-control mb-2" id="shipping_fee" type="number" placeholder="Livraison" required>
+<input class="form-control mb-2" id="whatsapp" placeholder="243..." required>
 
 <select id="type" class="form-control mb-2">
     <option value="FAST FOOD">FAST FOOD</option>
     <option value="TO PREPARE">TO PREPARE</option>
 </select>
 
-<input type="file" id="image" class="form-control mb-2">
+<input type="file" id="image" class="form-control mb-2" required>
 
-<textarea id="description" class="form-control mb-2" placeholder="Description"></textarea>
+<textarea id="description" class="form-control mb-2" placeholder="Description" required></textarea>
 
 <button class="btn btn-success w-100">Publier</button>
 

@@ -14,7 +14,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 products = []
 
-# ================= UTILS =================
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -30,8 +29,6 @@ def load_products():
 def save_products():
     with open(PRODUCTS_FILE, 'w', encoding='utf-8') as f:
         json.dump(products, f, ensure_ascii=False, indent=2)
-
-# ================= ROUTES =================
 
 @app.route("/")
 @app.route("/xcommand")
@@ -99,4 +96,4 @@ def uploaded_file(filename):
 
 if __name__ == '__main__':
     load_products()
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

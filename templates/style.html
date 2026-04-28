@@ -11,29 +11,26 @@
 body { background:#f8f9fa; }
 .hero { background:#198754;color:white;padding:40px;text-align:center; }
 .card { margin-bottom:15px; }
+img { height:200px; object-fit:cover; }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <div class="hero">
     <h1>X-command</h1>
     <p>Choisissez un type ou publiez un produit</p>
 
-    <!-- 🔥 BOUTON IMPORTANT -->
     <a href="/post" class="btn btn-light mt-3">
         ➕ Publier un produit
     </a>
 </div>
 
-<!-- TYPES -->
 <div class="container mt-4 text-center">
     <button onclick="selectCity('FAST FOOD')" class="btn btn-success m-2">FAST FOOD</button>
     <button onclick="selectCity('TO PREPARE')" class="btn btn-success m-2">TO PREPARE</button>
 </div>
 
-<!-- PRODUITS -->
 <div class="container mt-4">
     <div id="products" class="row"></div>
 </div>
@@ -57,12 +54,21 @@ function render(data){
     data.forEach(p=>{
         container.innerHTML += `
         <div class="col-md-3">
-            <div class="card">
+            <div class="card shadow">
                 <img src="${p.image_url}" class="card-img-top">
+
                 <div class="card-body">
                     <h5>${p.name}</h5>
-                    <p>${p.price} CDF</p>
+
+                    <p><strong>Prix :</strong> ${p.price} CDF</p>
+                    <p><strong>Livraison :</strong> ${p.shipping_fee} CDF</p>
+
                     <p>${p.description}</p>
+
+                    <a href="https://wa.me/${p.whatsapp}" target="_blank" 
+                       class="btn btn-success w-100">
+                       📲 Contacter sur WhatsApp
+                    </a>
                 </div>
             </div>
         </div>`;
